@@ -6,9 +6,10 @@ from ldai.client import LDAIClient
 from ldai.types import OpenAITokenUsage
 from threading import Event
 from halo import Halo
-from openai import OpenAI
+import boto3
+from botocore.exceptions import ClientError
 
-openai_client = OpenAI()
+client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -20,6 +21,14 @@ ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 # a single time.
 ci = os.getenv('CI')
 
+def map_prompt_to_conversation(prompt):
+    return [
+        {
+            'role': item['role'],
+            'content': [{'text': item['content']}]
+        }
+        for item in prompt
+    ]
 
 if __name__ == "__main__":
     if not sdk_key:
@@ -46,12 +55,12 @@ if __name__ == "__main__":
     configValue = aiClient.model_config(ai_config_key, context, False, {'myUserVariable': "Testing Variable"})
     tracker = configValue.tracker
 
-    completion = tracker.track_openai(openai_client.chat.completions.create,
-    model=configValue.config["config"]["modelId"],
-    messages=configValue.config["prompt"]
+    completion = response = client.converse(
+        modelId=configValue.config['model']['modelId'],
+        messages=map_prompt_to_conversation(configValue.config["prompt"])
     )
 
-    print("AI Response:", completion.choices[0].message.content)
+    print("AI Response:", response["output"]["message"]["content"][0]["text"])
     print("Success.")
 
     if ci is None:
