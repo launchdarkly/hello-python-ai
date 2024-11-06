@@ -30,7 +30,7 @@ if __name__ == "__main__":
         exit()
 
     ldclient.set_config(Config(sdk_key))
-    aiClient = LDAIClient(ldclient.get())
+    aiclient = LDAIClient(ldclient.get())
     
     if not ldclient.get().is_initialized():
         print("*** SDK failed to initialize. Please check your internet connection and SDK credential for any typo.")
@@ -42,13 +42,20 @@ if __name__ == "__main__":
     # LaunchDarkly contexts dashboard soon after you run the demo.
     context = Context.builder('example-user-key').kind('user').name('Sandy').build()
 
-    
-    configValue = aiClient.model_config(ai_config_key, context, False, {'myUserVariable': "Testing Variable"})
-    tracker = configValue.tracker
+    default_value = {
+        'model': {
+            'modelId': 'my-default-model',
+        },
+        'enabled': True,
+        'myVariable': 'My User Defined Variable'
+    }
+
+    config_value = aiclient.model_config(ai_config_key, context, default_value, {'myUserVariable': "Testing Variable"})
+    tracker = config_value.tracker
 
     completion = tracker.track_openai(openai_client.chat.completions.create,
-    model=configValue.config['model']['modelId'],
-    messages=configValue.config["prompt"]
+    model=config_value.config['model']['modelId'],
+    messages=config_value.config["prompt"]
     )
 
     print("AI Response:", completion.choices[0].message.content)
