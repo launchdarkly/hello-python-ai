@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     completion = tracker.track_openai(openai_client.chat.completions.create(
     model=config_value.config.model["modelId"],
-    messages=config_value.config.prompt[0].to_json()
+    messages=[item.to_json() for item in config_value.config.prompt]
     ))
 
     print("AI Response:", completion.choices[0].message.content)
