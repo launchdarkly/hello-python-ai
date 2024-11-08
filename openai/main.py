@@ -3,7 +3,6 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
-from ldai.types import OpenAITokenUsage
 from threading import Event
 from halo import Halo
 from openai import OpenAI
@@ -53,10 +52,10 @@ if __name__ == "__main__":
     config_value = aiclient.model_config(ai_config_key, context, default_value, {'myUserVariable': "Testing Variable"})
     tracker = config_value.tracker
 
-    completion = tracker.track_openai(openai_client.chat.completions.create,
-    model=config_value.config['model']['modelId'],
-    messages=config_value.config["prompt"]
-    )
+    completion = tracker.track_openai(openai_client.chat.completions.create(
+    model=config_value.config.model["modelId"],
+    messages=config_value.config.prompt[0].to_json()
+    ))
 
     print("AI Response:", completion.choices[0].message.content)
     print("Success.")

@@ -47,7 +47,7 @@ if __name__ == "__main__":
     tracker = configValue.tracker
 
     completion = tracker.track_openai(openai_client.chat.completions.create,
-    model=configValue.config["config"]["modelId"],
+    model=configValue.config['config']['modelId'],
     messages=configValue.config["prompt"]
     )
 

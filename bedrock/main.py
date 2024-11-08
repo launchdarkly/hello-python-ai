@@ -24,8 +24,8 @@ ci = os.getenv('CI')
 def map_prompt_to_conversation(prompt):
     return [
         {
-            'role': item['role'],
-            'content': [{'text': item['content']}]
+            'role': item.role,
+            'content': [{'text': item.content}]
         }
         for item in prompt
     ]
@@ -62,10 +62,10 @@ if __name__ == "__main__":
     config_value = aiclient.model_config(ai_config_key, context, default_value, {'myUserVariable': "Testing Variable"})
     tracker = config_value.tracker
 
-    completion = response = client.converse(
-        modelId=config_value.config['model']['modelId'],
-        messages=map_prompt_to_conversation(config_value.config["prompt"])
-    )
+    response = tracker.track_bedrock_converse(client.converse(
+        modelId=config_value.config.model["modelId"],
+        messages=map_prompt_to_conversation(config_value.config.prompt)
+    ))
 
     print("AI Response:", response["output"]["message"]["content"][0]["text"])
     print("Success.")

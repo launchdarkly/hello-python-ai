@@ -10,7 +10,7 @@ readme = "README.md"
 python = "^3.8"
 halo = ">=0.0.3"
 openai = ">=0.2.0"
-launchdarkly-server-sdk-ai = {git = "ssh://git@github.com/launchdarkly/python-server-sdk-ai"}
+launchdarkly-server-sdk-ai = {git = "ssh://git@github.com/launchdarkly/python-server-sdk-ai", rev = "dob/fixData"}
 
 [build-system]
 requires = ["poetry-core"]
