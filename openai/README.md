@@ -8,7 +8,7 @@ This demo requires Python 3.8 or higher.
 
 ## Build instructions
 
-1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing boolean feature flag in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_AI_CONFIG_KEY` to the flag key; otherwise, a boolean flag of `sample-ai-config` will be assumed.
+1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing an AI Config in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_AI_CONFIG_KEY` to the flag key; otherwise, an AI Config of `sample-ai-config` will be assumed.
 
    ```bash
    export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"

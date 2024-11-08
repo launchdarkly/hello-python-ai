@@ -8,7 +8,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-halo = ">=0.0.3"
 openai = ">=0.2.0"
 launchdarkly-server-sdk-ai = {git = "ssh://git@github.com/launchdarkly/python-server-sdk-ai", rev = "dob/fixData"}
 

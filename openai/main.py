@@ -3,8 +3,6 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
-from threading import Event
-from halo import Halo
 from openai import OpenAI
 
 openai_client = OpenAI()
@@ -14,11 +12,6 @@ sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config_key to the AI Config key you want to evaluate.
 ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
-
-# Set this environment variable to skip the loop process and evaluate the AI Config
-# a single time.
-ci = os.getenv('CI')
-
 
 if __name__ == "__main__":
     if not sdk_key:
@@ -60,9 +53,5 @@ if __name__ == "__main__":
     print("AI Response:", completion.choices[0].message.content)
     print("Success.")
 
-    if ci is None:
-        with Halo(text='Waiting for changes', spinner='dots'):
-            try:
-                Event().wait()
-            except KeyboardInterrupt:
-                pass
+    # Close the client to flush events and close the connection.
+    ldclient.get().close()
