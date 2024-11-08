@@ -3,11 +3,9 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
-from ldai.types import OpenAITokenUsage
 from threading import Event
 from halo import Halo
 import boto3
-from botocore.exceptions import ClientError
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
