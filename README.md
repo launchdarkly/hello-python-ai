@@ -8,7 +8,9 @@ This demo requires Python 3.8 or higher.
 
 ## Build Instructions
 
-This repository includes examples for `OpenAI` and `Bedrock`.
+This repository includes examples for `OpenAI` and `Bedrock`. Depending on your preferred provider, you may have to take some additional steps.
+
+### General setup
 
 1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing an AI Config in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_AI_CONFIG_KEY` to the flag key; otherwise, an AI Config of `sample-ai-config` will be assumed.
 
@@ -18,7 +20,13 @@ This repository includes examples for `OpenAI` and `Bedrock`.
    ```
 
 1. Ensure you have [Poetry](https://python-poetry.org/) installed.
-1. Install the required dependencies with `poetry install --all-extras`. Alternatively, you can install with `poetry install -E open` or `poetry install -E bedrock` to opt into only those required dependencies.
-1. On the command line, run `openai-example` or `bedrock-example` as relevant.
 
-You should receive an output of the model configuration and prompt being sent to the chosen provider.
+### OpenAI setup
+1. Install the required dependencies with `poetry install -E openai` or `poetry install --all-extras`.
+1. Set the environment variable `OPENAI_API_KEY` to your OpenAI key.
+1. On the command line, run `poetry run openai-example`.
+
+### Bedrock setup
+1. Install the required dependencies with `poetry install -E bedrock` or `poetry install --all-extras`.
+1. Ensure the required AWS credentials can be [auto-detected by the `boto3` library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). Examples might include environment variables, role providers, or shared credential files.
+1. On the command line, run `poetry run bedrock-example`.

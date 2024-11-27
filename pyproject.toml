@@ -5,21 +5,22 @@ description = "Hello LaunchDarkly for Python AI - OpenAI"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
+packages = [ { include = "examples" } ]
 
 [tool.poetry.scripts]
-openai-example = 'examples.openai'
-bedrock-example = 'examples.bedrock'
+bedrock-example = 'examples.bedrock:main'
+openai-example = 'examples.openai:main'
 
 [tool.poetry.dependencies]
 python = "^3.8"
 launchdarkly-server-sdk-ai = "<1.0.0"
 
-openai = { version = ">=0.2.0", optional = true }
 boto3 = { version = ">=0.2.0", optional = true }
+openai = { version = ">=0.2.0", optional = true }
 
 [tool.poetry.extras]
-openai = ["openai"]
 bedrock = ["boto3"]
+openai = ["openai"]
 
 [build-system]
 requires = ["poetry-core"]
