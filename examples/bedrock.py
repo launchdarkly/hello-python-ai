@@ -48,7 +48,7 @@ def main():
 
     default_value = AIConfig(
         enabled=True,
-        model=ModelConfig(id='my-default-model'),
+        model=ModelConfig(name='my-default-model'),
         messages=[],
     )
 
@@ -61,7 +61,7 @@ def main():
 
     response = tracker.track_bedrock_converse_metrics(
         client.converse(
-            modelId=config_value.model.id,
+            modelId=config_value.model.name,
             messages=map_messages_to_conversation(config_value.messages)
         )
     )
