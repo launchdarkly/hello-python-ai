@@ -38,7 +38,7 @@ def main():
 
     default_value = AIConfig(
         enabled=True,
-        model=ModelConfig(id='my-default-model'),
+        model=ModelConfig(name='my-default-model'),
         messages=[],
     )
     config_value, tracker = aiclient.config(
@@ -50,7 +50,7 @@ def main():
 
     completion = tracker.track_openai_metrics(
         openai_client.chat.completions.create(
-            model=config_value.model.id,
+            model=config_value.model.name,
             messages=[message.to_json() for message in config_value.messages],
         )
     )
