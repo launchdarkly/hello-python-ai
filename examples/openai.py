@@ -33,8 +33,8 @@ def main():
 
     # Set up the evaluation context. This context should appear on your
     # LaunchDarkly contexts dashboard soon after you run the demo.
-    context = Context.builder(
-        'example-user-key').kind('user').name('Sandy').build()
+    context = Context.builder('example-user-key') \
+        .kind('user').name('Sandy').build()
 
     default_value = AIConfig(
         enabled=True,
@@ -48,11 +48,13 @@ def main():
         {'myUserVariable': "Testing Variable"}
     )
 
+    messages = [] if config_value.messages is None else config_value.messages
     completion = tracker.track_openai_metrics(
-        openai_client.chat.completions.create(
-            model=config_value.model.name,
-            messages=[message.to_json() for message in config_value.messages],
-        )
+        lambda:
+            openai_client.chat.completions.create(
+                model=config_value.model.name,
+                messages=[message.to_dict() for message in messages],
+            )
     )
 
     print("AI Response:", completion.choices[0].message.content)
