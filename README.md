@@ -2,7 +2,7 @@
 
 We've built a simple console application that demonstrates how LaunchDarkly's SDK works.
 
-Below, you'll find the build procedure. For more comprehensive instructions, you can visit your [Quickstart page](https://app.launchdarkly.com/quickstart#/) or the [Python reference guide](https://docs.launchdarkly.com/sdk/server-side/python).
+Below, you'll find the build procedure. For more comprehensive instructions, you can visit your [Quickstart page](https://docs.launchdarkly.com/home/ai-configs/quickstart) or the [Python reference guide](https://docs.launchdarkly.com/sdk/ai/python).
 
 This demo requires Python 3.8 or higher.
 
@@ -22,11 +22,13 @@ This repository includes examples for `OpenAI` and `Bedrock`. Depending on your 
 1. Ensure you have [Poetry](https://python-poetry.org/) installed.
 
 ### OpenAI setup
+
 1. Install the required dependencies with `poetry install -E openai` or `poetry install --all-extras`.
 1. Set the environment variable `OPENAI_API_KEY` to your OpenAI key.
 1. On the command line, run `poetry run openai-example`.
 
 ### Bedrock setup
+
 1. Install the required dependencies with `poetry install -E bedrock` or `poetry install --all-extras`.
 1. Ensure the required AWS credentials can be [auto-detected by the `boto3` library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). Examples might include environment variables, role providers, or shared credential files.
 1. On the command line, run `poetry run bedrock-example`.
