@@ -48,6 +48,10 @@ def main():
         {'myUserVariable': "Testing Variable"}
     )
 
+    if not config_value.enabled:
+        print("AI Config is disabled")
+        return
+
     messages = [] if config_value.messages is None else config_value.messages
     completion = tracker.track_openai_metrics(
         lambda:
