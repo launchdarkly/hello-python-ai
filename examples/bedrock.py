@@ -22,18 +22,23 @@ def main():
         exit()
 
     ldclient.set_config(Config(sdk_key))
-    aiclient = LDAIClient(ldclient.get())
 
     if not ldclient.get().is_initialized():
         print("*** SDK failed to initialize. Please check your internet connection and SDK credential for any typo.")
         exit()
 
+    aiclient = LDAIClient(ldclient.get())
     print("*** SDK successfully initialized")
 
     # Set up the evaluation context. This context should appear on your
     # LaunchDarkly contexts dashboard soon after you run the demo.
-    context = Context.builder(
-        'example-user-key').kind('user').name('Sandy').build()
+    context = (
+        Context
+        .builder('example-user-key')
+        .kind('user')
+        .name('Sandy')
+        .build()
+    )
 
     DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant that can answer questions and help with tasks."
 
@@ -65,14 +70,12 @@ def main():
     chat_messages = [{'role': msg.role, 'content': [{'text': msg.content}]} for msg in config_value.messages if msg.role != 'system']
     system_messages = [{'text': msg.content} for msg in config_value.messages if msg.role == 'system']
 
-    USER_INPUT_1 = "What can you help me with?"
-    USER_INPUT_2 = "Can you give me a few examples?"
-
     # Add the user input to the conversation
-    print("User Input:\n", USER_INPUT_1)
-    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT_1}]})
+    USER_INPUT = "What can you help me with?"
+    print("User Input:\n", USER_INPUT)
+    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT}]})
 
-    response = tracker.track_bedrock_converse_metrics(
+    converse = tracker.track_bedrock_converse_metrics(
         client.converse(
             modelId=config_value.model.name,
             messages=chat_messages,
@@ -81,24 +84,10 @@ def main():
     )
 
     # Append the AI response to the conversation history
-    chat_messages.append(response["output"]["message"])
-    print("AI Response:\n", response["output"]["message"]["content"][0]["text"])
+    chat_messages.append(converse["output"]["message"])
+    print("AI Response:\n", converse["output"]["message"]["content"][0]["text"])
 
-    # Add the users follow-up input to the conversation
-    print("User Input:\n", USER_INPUT_2)
-    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT_2}]})
-
-    response = tracker.track_bedrock_converse_metrics(
-        client.converse(
-            modelId=config_value.model.name,
-            messages=chat_messages,
-            system=system_messages,
-        )
-    )
-
-    # Append the AI response to the conversation history
-    chat_messages.append(response["output"]["message"])
-    print("AI Response:\n", response["output"]["message"]["content"][0]["text"])
+    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
     # Close the client to flush events and close the connection.
