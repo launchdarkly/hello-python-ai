@@ -13,26 +13,6 @@ sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 # Set config_key to the AI Config key you want to evaluate.
 ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 
-
-def convert_to_langchain_messages(messages):
-    """Convert LaunchDarkly messages to LangChain messages."""
-    langchain_messages = []
-    if messages:
-        for message in messages:
-            message_dict = message.to_dict()
-            if message_dict['role'] == 'user':
-                langchain_messages.append(HumanMessage(content=message_dict['content']))
-            elif message_dict['role'] == 'assistant':
-                langchain_messages.append(AIMessage(content=message_dict['content']))
-            elif message_dict['role'] == 'system':
-                langchain_messages.append(SystemMessage(content=message_dict['content']))
-    
-    # Add a default user message if no messages exist
-    if not langchain_messages:
-        langchain_messages.append(HumanMessage(content="Hello! How can you help me today?"))
-    
-    return langchain_messages
-
 def track_langchain_metrics(tracker, func):
     """
     Track LangChain-specific operations.
@@ -87,8 +67,13 @@ def main():
 
     # Set up the evaluation context. This context should appear on your
     # LaunchDarkly contexts dashboard soon after you run the demo.
-    context = Context.builder('example-user-key') \
-        .kind('user').name('Sandy').build()
+    context = (
+        Context
+        .builder('example-user-key')
+        .kind('user')
+        .name('Sandy')
+        .build()
+    )
 
     DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant that can answer questions and help with tasks."
 
@@ -128,15 +113,23 @@ def main():
 
         print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
         
-        # Convert messages to LangChain format
-        langchain_messages = convert_to_langchain_messages(config_value.messages)
-        
         # Track the LangChain completion with LaunchDarkly metrics
-        completion = track_langchain_metrics(tracker, lambda: llm.invoke(langchain_messages))
-        
-        # Extract and print the response
+        messages = [message.to_dict() for message in (config_value.messages or [])]
+
+        USER_INPUT = "What can you help me with?"
+
+        # Add the user input to the conversation
+        print("User Input:\n", USER_INPUT)
+        messages.append({'role': 'user', 'content': USER_INPUT})
+
+        completion = track_langchain_metrics(tracker, lambda: llm.invoke(messages))
         response = completion.content
-        print("AI Response: \n", response)
+
+        # Add the AI response to the conversation history.
+        messages.append({'role': 'assistant', 'content': response})
+        print("AI Response:\n", response)
+
+        # Continue the conversation by adding user input to the messages list and invoking the LLM again.
         print("Success.")
 
     except Exception as e:
@@ -148,4 +141,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
