@@ -13,6 +13,15 @@ sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 # Set config_key to the AI Config key you want to evaluate.
 ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 
+def map_provider_to_langchain(provider_name):
+    """Map LaunchDarkly provider names to LangChain provider names."""
+    # Add any additional provider mappings here as needed.
+    provider_mapping = {
+        'gemini': 'google_genai'
+    }
+    lower_provider = provider_name.lower()
+    return provider_mapping.get(lower_provider, lower_provider)
+
 def track_langchain_metrics(tracker, func):
     """
     Track LangChain-specific operations.
@@ -103,11 +112,12 @@ def main():
 
     try:
         # Create LangChain model instance using init_chat_model
-        # Pass the provider from config_value
+        # Map the provider from config_value to LangChain format
         print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
+        langchain_provider = map_provider_to_langchain(config_value.provider.name)
         llm = init_chat_model(
             model=config_value.model.name,
-            model_provider=config_value.provider.name,
+            model_provider=langchain_provider,
             temperature=config_value.model.get_parameter('temperature') or 0.7,
             max_tokens=config_value.model.get_parameter('max_tokens') or 1000,
         )
