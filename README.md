@@ -37,6 +37,8 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 
 #### LangChain Multi-Provider setup
 
-1. Install all dependencies with `poetry install --all-extras`.
+This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages. You can add additional LangChain providers using the `poetry add` command.
+
+1. Install all dependencies with `poetry install -E langchain` or `poetry install --all-extras`.
 1. Set up API keys for the providers you want to use
 1. On the command line, run `poetry run langchain-example`

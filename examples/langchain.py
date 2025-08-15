@@ -89,7 +89,7 @@ def main():
     # Set a fallback AIConfig to use if a config is not found or your application is not able to connect to LaunchDarkly.
     default_value = AIConfig(
         enabled=True,
-        model=ModelConfig(name='gpt-3.5-turbo', parameters={'temperature': 0.7}),  # Default to OpenAI
+        model=ModelConfig(name='gpt-3.5-turbo', parameters={}),  # Default to OpenAI
         provider=ProviderConfig(name='openai'),
         messages=[LDMessage(role='system', content=DEFAULT_SYSTEM_MESSAGE)],
     )
@@ -118,8 +118,6 @@ def main():
         llm = init_chat_model(
             model=config_value.model.name,
             model_provider=langchain_provider,
-            temperature=config_value.model.get_parameter('temperature') or 0.7,
-            max_tokens=config_value.model.get_parameter('max_tokens') or 1000,
         )
         
         messages = [message.to_dict() for message in (config_value.messages or [])]
