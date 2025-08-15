@@ -13,17 +13,6 @@ sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 # Set config_key to the AI Config key you want to evaluate.
 ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 
-
-def map_messages_to_conversation(messages):
-    return [
-        {
-            'role': item.role,
-            'content': [{'text': item.content}]
-        }
-        for item in messages
-    ]
-
-
 def main():
     if not sdk_key:
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
@@ -59,14 +48,44 @@ def main():
         {'myUserVariable': "Testing Variable"}
     )
 
+    # Map the messages to the format expected by Bedrock
+    chat_messages = [{'role': msg.role, 'content': [{'text': msg.content}]} for msg in config_value.messages if msg.role != 'system']
+    system_messages = [{'text': msg.content} for msg in config_value.messages if msg.role == 'system']
+
+    USER_INPUT_1 = "What can you help me with?"
+    USER_INPUT_2 = "Can you give me a few examples?"
+
+    # Add the user input to the conversation
+    print("User Input:\n", USER_INPUT_1)
+    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT_1}]})
+
     response = tracker.track_bedrock_converse_metrics(
         client.converse(
             modelId=config_value.model.name,
-            messages=map_messages_to_conversation(config_value.messages)
+            messages=chat_messages,
+            system=system_messages,
         )
     )
 
-    print("AI Response:", response["output"]["message"]["content"][0]["text"])
+    # Append the AI response to the conversation history
+    chat_messages.append(response["output"]["message"])
+    print("AI Response:\n", response["output"]["message"]["content"][0]["text"])
+
+    # Add the users follow-up input to the conversation
+    print("User Input:\n", USER_INPUT_2)
+    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT_2}]})
+
+    response = tracker.track_bedrock_converse_metrics(
+        client.converse(
+            modelId=config_value.model.name,
+            messages=chat_messages,
+            system=system_messages,
+        )
+    )
+
+    # Append the AI response to the conversation history
+    chat_messages.append(response["output"]["message"])
+    print("AI Response:\n", response["output"]["message"]["content"][0]["text"])
     print("Success.")
 
     # Close the client to flush events and close the connection.
