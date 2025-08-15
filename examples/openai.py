@@ -33,8 +33,13 @@ def main():
 
     # Set up the evaluation context. This context should appear on your
     # LaunchDarkly contexts dashboard soon after you run the demo.
-    context = Context.builder('example-user-key') \
-        .kind('user').name('Sandy').build()
+    context = (
+        Context
+        .builder('example-user-key')
+        .kind('user')
+        .name('Sandy')
+        .build()
+    )
 
     DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant that can answer questions and help with tasks."
 
@@ -61,17 +66,29 @@ def main():
     if not config_value.enabled:
         print("AI Config is disabled")
         return
+    
+    messages = [message.to_dict() for message in (config_value.messages or [])]
 
-    messages = [] if config_value.messages is None else config_value.messages
+    # Add the user input to the conversation
+    USER_INPUT = "What can you help me with?"
+    print("User Input:\n", USER_INPUT)
+    messages.append({'role': 'user', 'content': USER_INPUT})
+
+    # Track the OpenAI completion with LaunchDarkly metrics
     completion = tracker.track_openai_metrics(
         lambda:
             openai_client.chat.completions.create(
                 model=config_value.model.name,
-                messages=[message.to_dict() for message in messages],
+                messages=messages,
             )
     )
+    ai_response = completion.choices[0].message.content
 
-    print("AI Response:", completion.choices[0].message.content)
+    # Add the AI response to the conversation history.
+    messages.append({'role': 'assistant', 'content': ai_response})
+    print("AI Response:\n", ai_response)
+
+    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
     # Close the client to flush events and close the connection.

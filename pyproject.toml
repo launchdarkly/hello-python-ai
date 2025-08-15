@@ -10,7 +10,7 @@ packages = [ { include = "examples" } ]
 [tool.poetry.scripts]
 bedrock-example = 'examples.bedrock:main'
 openai-example = 'examples.openai:main'
-langchain = 'examples.langchain:main'
+langchain-example = 'examples.langchain:main'
 
 [tool.poetry.dependencies]
 python = "^3.9"

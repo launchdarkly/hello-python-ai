@@ -104,30 +104,28 @@ def main():
     try:
         # Create LangChain model instance using init_chat_model
         # Pass the provider from config_value
+        print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
         llm = init_chat_model(
             model=config_value.model.name,
             model_provider=config_value.provider.name,
             temperature=config_value.model.get_parameter('temperature') or 0.7,
             max_tokens=config_value.model.get_parameter('max_tokens') or 1000,
         )
-
-        print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
         
-        # Track the LangChain completion with LaunchDarkly metrics
         messages = [message.to_dict() for message in (config_value.messages or [])]
 
-        USER_INPUT = "What can you help me with?"
-
         # Add the user input to the conversation
+        USER_INPUT = "What can you help me with?"
         print("User Input:\n", USER_INPUT)
         messages.append({'role': 'user', 'content': USER_INPUT})
 
+        # Track the LangChain completion with LaunchDarkly metrics
         completion = track_langchain_metrics(tracker, lambda: llm.invoke(messages))
-        response = completion.content
+        ai_response = completion.content
 
         # Add the AI response to the conversation history.
-        messages.append({'role': 'assistant', 'content': response})
-        print("AI Response:\n", response)
+        messages.append({'role': 'assistant', 'content': ai_response})
+        print("AI Response:\n", ai_response)
 
         # Continue the conversation by adding user input to the messages list and invoking the LLM again.
         print("Success.")

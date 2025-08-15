@@ -39,4 +39,4 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 
 1. Install all dependencies with `poetry install --all-extras`.
 1. Set up API keys for the providers you want to use
-1. On the command line, run `poetry run langchain`
+1. On the command line, run `poetry run langchain-example`
