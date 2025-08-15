@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig
+from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
 import boto3
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
@@ -46,11 +46,20 @@ def main():
     context = Context.builder(
         'example-user-key').kind('user').name('Sandy').build()
 
+    DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant that can answer questions and help with tasks."
+
+    # Set a fallback AIConfig to use if a config is not found or your application is not able to connect to LaunchDarkly.
     default_value = AIConfig(
         enabled=True,
-        model=ModelConfig(name='my-default-model'),
-        messages=[],
+        model=ModelConfig(name='my-default-model', parameters={}),
+        provider=ProviderConfig(name='bedrock'),
+        messages=[LDMessage(role='system', content=DEFAULT_SYSTEM_MESSAGE)],
     )
+
+    # Optionally, you can use a disabled AIConfig
+    # default_value = AIConfig(
+    #     enabled=False
+    # )
 
     config_value, tracker = aiclient.config(
         ai_config_key,
@@ -58,6 +67,10 @@ def main():
         default_value,
         {'myUserVariable': "Testing Variable"}
     )
+
+    if not config_value.enabled:
+        print("AI Config is disabled")
+        return
 
     response = tracker.track_bedrock_converse_metrics(
         client.converse(
