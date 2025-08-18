@@ -5,7 +5,6 @@ from ldclient.config import Config
 from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
 from ldai.tracker import TokenUsage
 from langchain.chat_models import init_chat_model
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
