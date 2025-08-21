@@ -4,7 +4,9 @@ from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
 from ldai.tracker import TokenUsage
-from langchain.chat_models import init_chat_model
+from google import genai
+from google.genai import types
+from typing import List, Optional, Tuple
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -12,18 +14,39 @@ sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 # Set config_key to the AI Config key you want to evaluate.
 ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 
-def map_provider_to_langchain(provider_name):
-    """Map LaunchDarkly provider names to LangChain provider names."""
-    # Add any additional provider mappings here as needed.
-    provider_mapping = {
-        'gemini': 'google_genai'
-    }
-    lower_provider = provider_name.lower()
-    return provider_mapping.get(lower_provider, lower_provider)
+# Set Google API key
+google_api_key = os.getenv('GOOGLE_API_KEY')
 
-def track_langchain_metrics(tracker, func):
+def map_to_google_ai_messages(
+    input_messages: List[LDMessage]
+) -> Tuple[Optional[str], List[types.Content]]:
+    messages: List[types.Content] = []
+
+    system_messages: List[str] = []
+
+    for message in input_messages:
+        if message.role == 'system':
+            system_messages.append(message.content)
+            continue
+        elif message.role == 'assistant':
+            role = "model"
+            parts = [types.Part(text=message.content)]
+        elif message.role == 'user':
+            role = "user"
+            parts = [types.Part(text=message.content)]
+        else:
+            # Skip other message types
+            continue
+
+        messages.append(types.Content(role=role, parts=parts))
+
+    # Concatenate system messages with spaces
+    system_instruction = " ".join(system_messages) if system_messages else None
+    return system_instruction, messages
+
+def track_genai_metrics(tracker, func):
     """
-    Track LangChain-specific operations.
+    Track GenAi-specific operations.
 
     This function will track the duration of the operation, the token
     usage, and the success or error status.
@@ -46,9 +69,9 @@ def track_langchain_metrics(tracker, func):
             # Extract token usage from LangChain response
             usage_data = result.usage_metadata
             token_usage = TokenUsage(
-                input=usage_data.get("input_tokens", 0),
-                output=usage_data.get("output_tokens", 0),
-                total=usage_data.get("total_tokens", 0) # LangChain also has values for input_token_details { cache_creation, cache_read }
+                input=getattr(usage_data, 'prompt_token_count', 0),
+                output=getattr(usage_data, "candidates_token_count", 0),
+                total=getattr(usage_data, 'total_token_count', 0)
             )
             tracker.track_tokens(token_usage)
     except Exception:
@@ -64,13 +87,17 @@ def main():
     if not ai_config_key:
         print("*** Please set the LAUNCHDARKLY_AI_CONFIG_KEY env first")
         exit()
+    if not google_api_key:
+        print("*** Please set the GOOGLE_API_KEY env first")
+        exit()
 
     ldclient.set_config(Config(sdk_key))
+    aiclient = LDAIClient(ldclient.get())
+
     if not ldclient.get().is_initialized():
         print("*** SDK failed to initialize. Please check your internet connection and SDK credential for any typo.")
         exit()
 
-    aiclient = LDAIClient(ldclient.get())
     print("*** SDK successfully initialized")
 
     # Set up the evaluation context. This context should appear on your
@@ -88,8 +115,8 @@ def main():
     # Set a fallback AIConfig to use if a config is not found or your application is not able to connect to LaunchDarkly.
     default_value = AIConfig(
         enabled=True,
-        model=ModelConfig(name='gpt-3.5-turbo', parameters={}),  # Default to OpenAI
-        provider=ProviderConfig(name='openai'),
+        model=ModelConfig(name='gemini-pro', parameters={}),
+        provider=ProviderConfig(name='google'),
         messages=[LDMessage(role='system', content=DEFAULT_SYSTEM_MESSAGE)],
     )
 
@@ -97,7 +124,7 @@ def main():
     # default_value = AIConfig(
     #     enabled=False
     # )
-    
+
     config_value, tracker = aiclient.config(
         ai_config_key,
         context,
@@ -109,41 +136,39 @@ def main():
         print("AI Config is disabled")
         return
 
-    try:
-        # Create LangChain model instance using init_chat_model
-        # Map the provider from config_value to LangChain format
-        print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
-        langchain_provider = map_provider_to_langchain(config_value.provider.name)
-        llm = init_chat_model(
-            model=config_value.model.name,
-            model_provider=langchain_provider,
+    # Configure Google Generative AI
+    client = genai.Client(
+        api_key=google_api_key,
+    )
+
+    # Convert LaunchDarkly messages to Google AI format using the helper function
+    system_instruction, messages = map_to_google_ai_messages(config_value.messages or [])
+
+    # Add the user input to the conversation
+    USER_INPUT = "What can you help me with?"
+    print("User Input:\n", USER_INPUT)
+    user_message = types.Content(role="user", parts=[types.Part(text=USER_INPUT)])
+    messages.append(user_message)
+
+    completion = track_genai_metrics(tracker, lambda: client.models.generate_content(
+        model=config_value.model.name,
+        contents=messages,
+        config=types.GenerateContentConfig(
+            system_instruction=system_instruction,
         )
-        
-        messages = [message.to_dict() for message in (config_value.messages or [])]
+    ))
+    ai_response = completion.text
 
-        # Add the user input to the conversation
-        USER_INPUT = "What can you help me with?"
-        print("User Input:\n", USER_INPUT)
-        messages.append({'role': 'user', 'content': USER_INPUT})
+    # Add the AI response to the conversation history
+    ai_message = types.Content(role="model", parts=[types.Part(text=ai_response)])
+    messages.append(ai_message)
+    print("AI Response:\n", ai_response)
 
-        # Track the LangChain completion with LaunchDarkly metrics
-        completion = track_langchain_metrics(tracker, lambda: llm.invoke(messages))
-        ai_response = completion.content
-
-        # Add the AI response to the conversation history.
-        messages.append({'role': 'assistant', 'content': ai_response})
-        print("AI Response:\n", ai_response)
-
-        # Continue the conversation by adding user input to the messages list and invoking the LLM again.
-        print("Success.")
-
-    except Exception as e:
-        print(f"Error during completion: {e}")
-        print("Please ensure you have the correct API keys and credentials set up for the detected provider.")
+    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
+    print("Success.")
 
     # Close the client to flush events and close the connection.
     ldclient.get().close()
-
 
 if __name__ == "__main__":
     main()
