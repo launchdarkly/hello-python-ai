@@ -3,6 +3,7 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types
 from typing import List, Optional, Tuple
@@ -22,7 +23,7 @@ def map_to_google_ai_messages(
     messages: List[types.Content] = []
 
     system_messages: List[str] = []
-    
+
     for message in input_messages:
         if message.role == 'system':
             system_messages.append(message.content)
@@ -38,11 +39,46 @@ def map_to_google_ai_messages(
             continue
 
         messages.append(types.Content(role=role, parts=parts))
-    
+
     # Concatenate system messages with spaces
     system_instruction = " ".join(system_messages) if system_messages else None
     return system_instruction, messages
 
+def track_genai_metrics(tracker, func):
+    """
+    Track GenAi-specific operations.
+
+    This function will track the duration of the operation, the token
+    usage, and the success or error status.
+
+    If the provided function throws, then this method will also throw.
+
+    In the case the provided function throws, this function will record the
+    duration and an error.
+
+    A failed operation will not have any token usage data.
+
+    :param tracker: The LaunchDarkly tracker instance.
+    :param func: Function to track.
+    :return: Result of the tracked function.
+    """
+    try:
+        result = tracker.track_duration_of(func)
+        tracker.track_success()
+        if hasattr(result, "usage_metadata") and result.usage_metadata:
+            # Extract token usage from LangChain response
+            usage_data = result.usage_metadata
+            token_usage = TokenUsage(
+                input=getattr(usage_data, 'prompt_token_count', 0),
+                output=getattr(usage_data, "candidates_token_count", 0),
+                total=getattr(usage_data, 'total_token_count', 0)
+            )
+            tracker.track_tokens(token_usage)
+    except Exception:
+        tracker.track_error()
+        raise
+
+    return result
 
 def main():
     if not sdk_key:
@@ -107,14 +143,14 @@ def main():
 
     # Convert LaunchDarkly messages to Google AI format using the helper function
     system_instruction, messages = map_to_google_ai_messages(config_value.messages or [])
-    
+
     # Add the user input to the conversation
     USER_INPUT = "What can you help me with?"
     print("User Input:\n", USER_INPUT)
     user_message = types.Content(role="user", parts=[types.Part(text=USER_INPUT)])
     messages.append(user_message)
 
-    completion = tracker.track_openai_metrics(lambda: client.models.generate_content(
+    completion = track_genai_metrics(tracker, lambda: client.models.generate_content(
         model=config_value.model.name,
         contents=messages,
         config=types.GenerateContentConfig(
@@ -135,4 +171,4 @@ def main():
     ldclient.get().close()
 
 if __name__ == "__main__":
-    main() 
+    main()

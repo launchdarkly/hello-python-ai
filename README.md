@@ -23,19 +23,25 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 
 ### Provider-Specific Setup
 
-#### OpenAI setup
+#### OpenAI setup (single provider)
 
 1. Install the required dependencies with `poetry install -E openai` or `poetry install --all-extras`.
 1. Set the environment variable `OPENAI_API_KEY` to your OpenAI key.
 1. On the command line, run `poetry run openai-example`.
 
-#### Bedrock setup
+#### Bedrock setup (single provider)
 
 1. Install the required dependencies with `poetry install -E bedrock` or `poetry install --all-extras`.
 1. Ensure the required AWS credentials can be [auto-detected by the `boto3` library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). Examples might include environment variables, role providers, or shared credential files.
 1. On the command line, run `poetry run bedrock-example`.
 
-#### LangChain Multi-Provider setup
+#### Gemini setup (single provider)
+
+1. Install the required dependencies with `poetry install -E gemini` or `poetry install --all-extras`.
+1. Set the environment variable `GOOGLE_API_KEY` to your Google API key.
+1. On the command line, run `poetry run gemini-example`.
+
+#### LangChain setup (multiple providers)
 
 This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages. You can add additional LangChain providers using the `poetry add` command.
 
