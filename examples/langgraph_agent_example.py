@@ -85,7 +85,7 @@ def main():
     print(f"🔍 Using agent config: {agent_config_key}")
     print()
 
-    """Create a LangChain model with LaunchDarkly AI config."""
+    # Create a LangChain model with LaunchDarkly AI config.
     # Default value with disabled agent
     default_value = LDAIAgentDefaults(
         enabled=False,  # Disabled by default
