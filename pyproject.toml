@@ -8,10 +8,10 @@ readme = "README.md"
 packages = [ { include = "examples" } ]
 
 [tool.poetry.scripts]
-bedrock-example = 'examples.bedrock:main'
-openai-example = 'examples.openai:main'
-gemini-example = 'examples.gemini:main'
-langchain-example = 'examples.langchain:main'
+bedrock-example = 'examples.bedrock_example:main'
+openai-example = 'examples.openai_example:main'
+gemini-example = 'examples.gemini_example:main'
+langchain-example = 'examples.langchain_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.9"
