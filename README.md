@@ -58,3 +58,14 @@ This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages.
    export LAUNCHDARKLY_AGENT_CONFIG_KEY="sample-ai-agent-config"
    ```
 1. On the command line, run `poetry run langgraph-agent-example`
+
+#### LangGraph setup (multiple providers, multiple agents)
+
+1. Install all dependencies with `poetry install -E langgraph` or `poetry install --all-extras`.
+1. Set up API keys for the providers you want to use
+1. Optionally set environment variables for the agent configs:
+   ```bash
+   export LAUNCHDARKLY_ANALYZER_CONFIG_KEY="code-review-analyzer"
+   export LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY="code-review-documentation"
+   ```
+1. On the command line, run `poetry run langgraph-multi-agent-example`

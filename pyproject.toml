@@ -13,6 +13,7 @@ openai-example = 'examples.openai_example:main'
 gemini-example = 'examples.gemini_example:main'
 langchain-example = 'examples.langchain_example:main'
 langgraph-agent-example = 'examples.langgraph_agent_example:main'
+langgraph-multi-agent-example = 'examples.langgraph_multi_agent_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.9"
