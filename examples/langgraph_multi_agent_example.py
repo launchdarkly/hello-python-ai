@@ -2,16 +2,13 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, ModelConfig, ProviderConfig, LDMessage, LDAIAgentConfig, LDAIAgentDefaults
+from ldai.client import LDAIClient, LDAIAgentConfig, LDAIAgentDefaults
 from ldai.tracker import TokenUsage
 from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
 from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
-from typing import Annotated, Sequence
 from typing_extensions import TypedDict
-import json
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -35,19 +32,36 @@ def map_provider_to_langchain(provider_name):
     lower_provider = provider_name.lower()
     return provider_mapping.get(lower_provider, lower_provider)
 
-def track_langchain_metrics(tracker, func):
+def track_langgraph_metrics(tracker, func, prev_message_count=0):
     """
-    Track LangChain-specific operations with LaunchDarkly metrics.
+    Track LangGraph agent operations with LaunchDarkly metrics.
     """
     try:
         result = tracker.track_duration_of(func)
         tracker.track_success()
-        if hasattr(result, "usage_metadata") and result.usage_metadata:
-            usage_data = result.usage_metadata
+        
+        # For LangGraph agents, usage_metadata is included on all messages that used AI
+        total_input_tokens = 0
+        total_output_tokens = 0
+        total_tokens = 0
+
+        if "messages" in result:
+            # Only look at messages that were added during this function call
+            new_messages = result['messages'][prev_message_count:]
+            print(f"New messages: {new_messages}")
+            for message in new_messages:
+                # Check for usage_metadata directly on the message
+                if hasattr(message, "usage_metadata") and message.usage_metadata:
+                    usage_data = message.usage_metadata
+                    total_input_tokens += usage_data.get("input_tokens", 0)
+                    total_output_tokens += usage_data.get("output_tokens", 0)
+                    total_tokens += usage_data.get("total_tokens", 0)
+
+        if total_tokens > 0:
             token_usage = TokenUsage(
-                input=usage_data.get("input_tokens", 0),
-                output=usage_data.get("output_tokens", 0),
-                total=usage_data.get("total_tokens", 0)
+                input=total_input_tokens,
+                output=total_output_tokens,
+                total=total_tokens
             )
             tracker.track_tokens(token_usage)
     except Exception:
@@ -103,7 +117,8 @@ def ai_node(
         )
         
         # Track and execute the AI operation
-        completion = track_langchain_metrics(tracker, lambda: agent.invoke({"messages": state["messages"]}))
+        prev_message_count = len(state["messages"])
+        completion = track_langgraph_metrics(tracker, lambda: agent.invoke({"messages": state["messages"]}), prev_message_count)
     
         
         # Extract the content from the agent's response
