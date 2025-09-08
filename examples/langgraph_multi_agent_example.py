@@ -9,7 +9,7 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
-from typing import Annotated, Sequence, Literal
+from typing import Annotated, Sequence
 from typing_extensions import TypedDict
 import json
 
@@ -55,61 +55,13 @@ def track_langchain_metrics(tracker, func):
         raise
     return result
 
-# Agent system prompts
-ANALYZER_AGENT_INSTRUCTIONS = """You are a senior software engineer specializing in code review and analysis. Your role is to thoroughly analyze code for:
+# Note: Agent instructions are now configured through LaunchDarkly AI flags
+# The SDK will use the instructions from the flag configuration
 
-1. **Bug Detection**: Identify potential bugs, logic errors, and edge cases
-2. **Performance Issues**: Spot inefficient algorithms, memory leaks, and optimization opportunities
-3. **Security Vulnerabilities**: Detect security flaws like SQL injection, XSS, authentication issues
-4. **Code Quality**: Assess readability, maintainability, and adherence to best practices
-5. **Architecture Concerns**: Identify design patterns, coupling issues, and scalability problems
-
-**Analysis Guidelines:**
-- Be thorough but constructive in your feedback
-- Provide specific examples and suggestions for improvements
-- Consider the programming language's best practices
-- Prioritize issues by severity (critical, high, medium, low)
-- Include both problems and positive observations
-
-**Output Format:**
-- Use markdown formatting to organize the results
-- Indent any headings to fit under the "## Code Analysis"
-- Start with a brief summary of overall code quality
-- List issues by category (Bugs, Performance, Security, Quality, Architecture)
-- For each issue, provide: severity, description, location, and suggested fix
-- End with recommendations for next steps"""
-
-DOCUMENTATION_AGENT_INSTRUCTIONS = """You are a technical writer specializing in software documentation. Your role is to create clear, comprehensive documentation based on code analysis and review feedback.
-
-**Documentation Responsibilities:**
-1. **Function Documentation**: Create clear docstrings and function descriptions
-2. **API Documentation**: Document interfaces, parameters, and return values
-3. **Usage Examples**: Provide practical examples of how to use the code
-4. **Troubleshooting Guides**: Document common issues and solutions
-5. **README Updates**: Suggest improvements to project documentation
-
-**Writing Guidelines:**
-- Use clear, concise language that both technical and non-technical stakeholders can understand
-- Include code examples where helpful
-- Structure documentation logically with headers and sections
-- Consider the target audience (developers, users, maintainers)
-- Follow documentation best practices for the specific technology stack
-
-**Output Format:**
-- The results will be included in an existing markdown document section titled ## Generated Documentation
-- Generate appropriate docstrings for functions/classes
-- Create usage examples and code snippets
-- Suggest README improvements
-- Provide troubleshooting sections if issues were identified
-- Include any relevant diagrams or flow descriptions"""
-
-def create_agent_with_config(aiclient, config_key, context, agent_instructions):
+def create_agent_with_config(aiclient, config_key, context):
     """Create a LangChain model with LaunchDarkly AI config."""
     default_value = LDAIAgentDefaults(
-        enabled=True,
-        model=ModelConfig(name='gpt-3.5-turbo', parameters={}),
-        provider=ProviderConfig(name='openai'),
-        instructions=agent_instructions,
+        enabled=False,  # Disabled by default
     )
 
     agent_config = aiclient.agent(
@@ -134,93 +86,62 @@ def create_agent_with_config(aiclient, config_key, context, agent_instructions):
     
     return agent, agent_config.tracker
 
-def analyze_code(state: CodeReviewState, aiclient, context) -> Command[Literal["document", END]]:
-    """Agent that analyzes code for issues and improvements."""
-    print("Analyzing code")
-    try:
-        agent, tracker = create_agent_with_config(
-            aiclient, analyzer_config_key, context, ANALYZER_AGENT_INSTRUCTIONS
-        )
-        
-        # Track and execute the analysis
-        completion = track_langchain_metrics(tracker, lambda: agent.invoke({"messages": state["messages"]}))
-        
-        print(f"✅ Code analysis completed using {analyzer_config_key}")
-        
-        # Extract the analysis from the agent's response
-        analysis = ""
-        if completion["messages"]:
-            last_message = completion["messages"][-1]
-            if hasattr(last_message, 'content'):
-                analysis = last_message.content
-            else:
-                analysis = last_message.get('content', '')
-        
-        # Return Command to update state and route to next agent
-        return Command(
-            goto="document",
-            update={
-                "messages": completion["messages"],
-                "analysis": analysis
-            }
-        )
-        
-    except Exception as e:
-        print(f"❌ Error in code analysis: {e}")
-        return Command(
-            goto=END,
-            update={
-                "messages": [{"role": "system", "content": f"Error: {str(e)}"}],
-                "analysis": f"Error: {str(e)}"
-            }
-        )
-
-def generate_documentation(state: CodeReviewState, aiclient, context) -> Command[Literal["finalize", END]]:
-    """Agent that generates documentation based on code analysis."""
-    print("Generating documentation")
-    try:
-        agent, tracker = create_agent_with_config(
-            aiclient, documentation_config_key, context, DOCUMENTATION_AGENT_INSTRUCTIONS
-        )
+def ai_node(
+    state: CodeReviewState, 
+    aiclient, 
+    context, 
+    config_key: str, 
+    state_key: str,
+    next_step: str
+) -> Command:
+    """Unified function to process code with AI agents (analysis or documentation)."""
+    print(f"Starting node for {config_key}")
     
-        # Create context message with the analysis
-        context_message = f"Based on this code analysis:\n\n{state['analysis']}\n\nPlease generate comprehensive documentation."
-        messages_with_context = state["messages"] + [{"role": "user", "content": context_message}]
+    try:
+        agent, tracker = create_agent_with_config(
+            aiclient, config_key, context
+        )
         
-        # Track and execute the documentation generation
-        completion = track_langchain_metrics(tracker, lambda: agent.invoke({"messages": messages_with_context}))
+        # Track and execute the AI operation
+        completion = track_langchain_metrics(tracker, lambda: agent.invoke({"messages": state["messages"]}))
+    
         
-        print(f"✅ Documentation generated using {documentation_config_key}")
-        
-        # Extract the documentation from the agent's response
-        documentation = ""
+        # Extract the content from the agent's response
+        content = ""
         if completion["messages"]:
             last_message = completion["messages"][-1]
             if hasattr(last_message, 'content'):
-                documentation = last_message.content
-            else:
-                documentation = last_message.get('content', '')
+                content = last_message.content
         
-        # Return Command to update state and route to next agent
+        # Return Command to update state and route to next step
         return Command(
-            goto="finalize",
+            goto=next_step,
             update={
                 "messages": completion["messages"],
-                "documentation": documentation
+                state_key: content
             }
         )
         
     except Exception as e:
-        print(f"❌ Error in documentation generation: {e}")
+        print(f"❌ Error in node for {config_key}: {e}")
+        if "disabled" in str(e).lower():
+            print(f"⚠️  AI Config {config_key} is disabled. Skipping node for {config_key}.")
+            return Command(
+                goto=END,
+                update={
+                    "messages": state["messages"],
+                    state_key: f"AI Config {config_key} is disabled. Node for {config_key} skipped."
+                }
+            )
         return Command(
             goto=END,
             update={
                 "messages": [{"role": "system", "content": f"Error: {str(e)}"}],
-                "documentation": f"Error: {str(e)}"
+                state_key: f"Error: {str(e)}"
             }
         )
 
-def create_final_report(state: CodeReviewState) -> Command[Literal[END]]:
+def create_final_report(state: CodeReviewState) -> Command:
     """Combine analysis and documentation into a final report."""
     print("Creating final report")
     
@@ -302,8 +223,8 @@ def calculate_average(numbers):
     workflow = StateGraph(CodeReviewState)
     
     # Add nodes with proper function signatures
-    workflow.add_node("analyze", lambda state: analyze_code(state, aiclient, context))
-    workflow.add_node("document", lambda state: generate_documentation(state, aiclient, context))
+    workflow.add_node("analyze", lambda state: ai_node(state, aiclient, context, analyzer_config_key, "analysis", "document"))
+    workflow.add_node("document", lambda state: ai_node(state, aiclient, context, documentation_config_key, "documentation", "finalize"))
     workflow.add_node("finalize", create_final_report)
     
     # Define the workflow
