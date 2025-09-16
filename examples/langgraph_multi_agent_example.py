@@ -48,7 +48,6 @@ def track_langgraph_metrics(tracker, func, prev_message_count=0):
         if "messages" in result:
             # Only look at messages that were added during this function call
             new_messages = result['messages'][prev_message_count:]
-            print(f"New messages: {new_messages}")
             for message in new_messages:
                 # Check for usage_metadata directly on the message
                 if hasattr(message, "usage_metadata") and message.usage_metadata:
