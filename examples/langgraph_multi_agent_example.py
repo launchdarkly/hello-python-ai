@@ -87,7 +87,7 @@ def create_agent_with_config(aiclient, config_key, context):
     )
 
     if not agent_config.enabled:
-        raise Exception(f"AI Config {config_key} is disabled")
+        return None, None, True
     
     langchain_provider = map_provider_to_langchain(agent_config.provider.name)
     llm = init_chat_model(
@@ -98,7 +98,7 @@ def create_agent_with_config(aiclient, config_key, context):
     # Create a React agent with the LLM
     agent = create_react_agent(llm, [], prompt=agent_config.instructions)
     
-    return agent, agent_config.tracker
+    return agent, agent_config.tracker, False
 
 def ai_node(
     state: CodeReviewState, 
@@ -112,15 +112,23 @@ def ai_node(
     print(f"Starting node for {config_key}")
     
     try:
-        agent, tracker = create_agent_with_config(
+        agent, tracker, disabled = create_agent_with_config(
             aiclient, config_key, context
         )
+        
+        if disabled:
+            return Command(
+                goto=END,
+                update={
+                    "messages": state["messages"],
+                    state_key: f"AI Config {config_key} is disabled. Node for {config_key} skipped."
+                }
+            )
         
         # Track and execute the AI operation
         prev_message_count = len(state["messages"])
         completion = track_langgraph_metrics(tracker, lambda: agent.invoke({"messages": state["messages"]}), prev_message_count)
-    
-        
+
         # Extract the content from the agent's response
         content = ""
         if completion["messages"]:
@@ -139,15 +147,6 @@ def ai_node(
         
     except Exception as e:
         print(f"❌ Error in node for {config_key}: {e}")
-        if "disabled" in str(e).lower():
-            print(f"⚠️  AI Config {config_key} is disabled. Skipping node for {config_key}.")
-            return Command(
-                goto=END,
-                update={
-                    "messages": state["messages"],
-                    state_key: f"AI Config {config_key} is disabled. Node for {config_key} skipped."
-                }
-            )
         return Command(
             goto=END,
             update={
