@@ -12,7 +12,8 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 
 ### General setup
 
-1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing AI Config in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_AI_CONFIG_KEY` to the flag key; otherwise, an AI Config of `sample-ai-config` or `sample-ai-agent-config` will be assumed.
+1. [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) using the key specified in each example, or copy the key of existing AI Config in your LaunchDarkly project that you want to evaluate.
+1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key and `LAUNCHDARKLY_AI_CONFIG_KEY` to the AI Config key; otherwise, an AI Config of `sample-ai-config` or `sample-ai-agent-config` will be assumed for most examples.
 
    ```bash
    export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"
@@ -46,15 +47,27 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages. You can add additional LangChain providers using the `poetry add` command.
 
 1. Install all dependencies with `poetry install -E langchain` or `poetry install --all-extras`.
-1. Set up API keys for the providers you want to use
+1. Set up API keys for the providers you want to use.
 1. On the command line, run `poetry run langchain-example`
 
 #### LangGraph setup (multiple providers, single agent)
 
 1. Install all dependencies with `poetry install -E langgraph` or `poetry install --all-extras`.
-1. Set up API keys for the providers you want to use
-1. Optionally set environment variable for the agent config:
+1. Set up API keys for the providers you want to use.
+1. Optionally set this environment variable to use a different agent config:
    ```bash
    export LAUNCHDARKLY_AGENT_CONFIG_KEY="sample-ai-agent-config"
    ```
-1. On the command line, run `poetry run langgraph-agent-example`
+1. On the command line, run `poetry run langgraph-agent-example`.
+
+#### LangGraph setup (multiple providers, multiple agents)
+
+1. Install all dependencies with `poetry install -E langgraph` or `poetry install --all-extras`.
+1. Set up API keys for the providers you want to use.
+1. [Create an AI Config (Agent-based)](https://launchdarkly.com/docs/home/ai-configs/agents) using the keys below. Write a goal for each config and enable it with targeting rules.
+1. Optionally set these environment variables to use different agent configs:
+   ```bash
+   export LAUNCHDARKLY_ANALYZER_CONFIG_KEY="code-review-analyzer"
+   export LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY="code-review-documentation"
+   ```
+1. On the command line, run `poetry run langgraph-multi-agent-example`.
