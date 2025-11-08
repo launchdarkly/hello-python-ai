@@ -1,9 +1,10 @@
 import os
 import json
+import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient, AIConfig
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -15,7 +16,7 @@ ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 judge_key = os.getenv('LAUNCHDARKLY_JUDGE_KEY', 'ld-ai-judge-accuracy')
 
 
-def main():
+async def async_main():
     if not sdk_key:
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
@@ -45,7 +46,7 @@ def main():
             'enabled': False,
         }
 
-        chat = aiclient.create_chat(ai_config_key, context, default_value, {
+        chat = await aiclient.create_chat(ai_config_key, context, default_value, {
             'companyName': 'LaunchDarkly',
         })
 
@@ -58,16 +59,19 @@ def main():
         print("User Input:", user_input)
 
         # The invoke method will automatically evaluate the chat response with any judges defined in the AI config
-        chat_response = chat.invoke(user_input)
+        chat_response = await chat.invoke(user_input)
         print("Chat Response:", chat_response.message.content)
 
         # Log judge evaluation results with full detail
-        eval_results = chat_response.evaluations
+        eval_results = await chat_response.evaluations
         print("Judge results:", json.dumps(eval_results, indent=2))
 
         # Example of using the judge functionality with direct input and output
         # Get AI judge configuration from LaunchDarkly
-        judge = aiclient.create_judge(judge_key, context, {'enabled': False})
+        judge_default_value = AIConfig(
+            enabled=False,
+        )
+        judge = await aiclient.create_judge(judge_key, context, judge_default_value)
 
         if not judge:
             print("*** AI judge configuration is not enabled")
@@ -80,7 +84,7 @@ def main():
         print("Input:", input_text)
         print("Output:", output_text)
 
-        judge_response = judge.evaluate(input_text, output_text)
+        judge_response = await judge.evaluate(input_text, output_text)
 
         # Track the judge evaluation scores on the tracker for the aiConfig you are evaluating
         # Example:
@@ -95,6 +99,11 @@ def main():
 
     # Close the client to flush events and close the connection.
     ldclient.get().close()
+
+
+def main():
+    """Synchronous entry point for Poetry script."""
+    asyncio.run(async_main())
 
 
 if __name__ == "__main__":
