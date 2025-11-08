@@ -24,7 +24,7 @@ async def async_main():
     
     # Create a console handler
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+    console_handler.setLevel(logging.WARN)
     
     # Create a formatter and set it for the handler
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -80,13 +80,17 @@ async def async_main():
 
         # Log judge evaluation results with full detail
         if chat_response.evaluations is not None:
-            try:
-                # Try to await if it's a coroutine
-                eval_results = await chat_response.evaluations
-            except TypeError:
-                # If it's not awaitable, use it directly
-                eval_results = chat_response.evaluations
-            print("Judge results:", json.dumps(eval_results, indent=2))
+            # chat_response.evaluations is a list of awaitable judge results
+            eval_results_list = chat_response.evaluations
+            
+            # Await all judge results in parallel
+            eval_results = await asyncio.gather(*eval_results_list)
+            
+            # Convert each JudgeResponse to dict
+            eval_results_dict = [result.to_dict() if hasattr(result, 'to_dict') else result for result in eval_results]
+            
+            print("Judge results:")
+            print(json.dumps(eval_results_dict, indent=2, default=str))
         else:
             print("No judge evaluations available")
 
@@ -114,7 +118,10 @@ async def async_main():
         # Example:
         # aiConfig.tracker.track_eval_scores(judge_response.evals)
 
-        print("Judge Response:", judge_response)
+        # Convert JudgeResponse to dict for display using to_dict()
+        judge_response_dict = judge_response.to_dict()
+        print("Judge Response:")
+        print(json.dumps(judge_response_dict, indent=2, default=str))
 
         print("Success.")
 

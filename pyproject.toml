@@ -18,7 +18,7 @@ judge-example = 'examples.judge_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-launchdarkly-server-sdk-ai = { path = "/external-repos/python-server-sdk-ai", develop = true }
+launchdarkly-server-sdk-ai = { git = "https://github.com/launchdarkly/python-server-sdk-ai.git", branch = "jb/temp-judge" }
 
 boto3 = { version = ">=0.2.0", optional = true }
 openai = { version = ">=0.2.0", optional = true }
