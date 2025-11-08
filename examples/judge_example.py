@@ -1,6 +1,7 @@
 import os
 import json
 import asyncio
+import logging
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
@@ -17,6 +18,21 @@ judge_key = os.getenv('LAUNCHDARKLY_JUDGE_KEY', 'ld-ai-judge-accuracy')
 
 
 async def async_main():
+    # Setup debug logger for ldclient
+    ld_logger = logging.getLogger("ldclient")
+    ld_logger.setLevel(logging.DEBUG)
+    
+    # Create a console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    
+    # Create a formatter and set it for the handler
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    
+    # Add the handler to the logger
+    ld_logger.addHandler(console_handler)
+
     if not sdk_key:
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
@@ -42,9 +58,9 @@ async def async_main():
 
     try:
         # Example using the chat functionality which automates the judge evaluation
-        default_value = {
-            'enabled': False,
-        }
+        default_value = AIConfig(
+            enabled=False,
+        )
 
         chat = await aiclient.create_chat(ai_config_key, context, default_value, {
             'companyName': 'LaunchDarkly',
@@ -63,8 +79,16 @@ async def async_main():
         print("Chat Response:", chat_response.message.content)
 
         # Log judge evaluation results with full detail
-        eval_results = await chat_response.evaluations
-        print("Judge results:", json.dumps(eval_results, indent=2))
+        if chat_response.evaluations is not None:
+            try:
+                # Try to await if it's a coroutine
+                eval_results = await chat_response.evaluations
+            except TypeError:
+                # If it's not awaitable, use it directly
+                eval_results = chat_response.evaluations
+            print("Judge results:", json.dumps(eval_results, indent=2))
+        else:
+            print("No judge evaluations available")
 
         # Example of using the judge functionality with direct input and output
         # Get AI judge configuration from LaunchDarkly
