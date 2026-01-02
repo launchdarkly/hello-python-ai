@@ -5,7 +5,7 @@ import logging
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai import LDAIClient, AIConfig
+from ldai import LDAIClient, AICompletionConfigDefault
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -58,7 +58,7 @@ async def async_main():
 
     try:
         # Example using the chat functionality which automates the judge evaluation
-        default_value = AIConfig(
+        default_value = AICompletionConfigDefault(
             enabled=False,
         )
 
@@ -67,7 +67,7 @@ async def async_main():
         })
 
         if not chat:
-            print("*** AI chat configuration is not enabled")
+            print(f"*** AI chat configuration is not enabled for key: {ai_config_key}")
             return
 
         print("\n*** Starting chat:")
@@ -96,13 +96,13 @@ async def async_main():
 
         # Example of using the judge functionality with direct input and output
         # Get AI judge configuration from LaunchDarkly
-        judge_default_value = AIConfig(
+        judge_default_value = AICompletionConfigDefault(
             enabled=False,
         )
         judge = await aiclient.create_judge(judge_key, context, judge_default_value)
 
         if not judge:
-            print("*** AI judge configuration is not enabled")
+            print(f"*** AI judge configuration is not enabled for key: {judge_key}")
             return
 
         print("\n*** Starting judge evaluation of direct input and output:")
