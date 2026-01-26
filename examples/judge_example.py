@@ -99,7 +99,12 @@ async def async_main():
         judge_default_value = AICompletionConfigDefault(
             enabled=False,
         )
+        print(f"*** Attempting to create judge with key: {judge_key}")
         judge = await aiclient.create_judge(judge_key, context, judge_default_value)
+        
+        # Debug: print judge config details
+        if judge:
+            print(f"*** Judge config - evaluation_metric_key: {judge._ai_config.evaluation_metric_key if hasattr(judge, '_ai_config') else 'N/A'}")
 
         if not judge:
             print(f"*** AI judge configuration is not enabled for key: {judge_key}")
