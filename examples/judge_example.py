@@ -16,6 +16,8 @@ ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
 # Set judge_key to the Judge key you want to use.
 judge_key = os.getenv('LAUNCHDARKLY_JUDGE_KEY', 'ld-ai-judge-accuracy')
 
+is_staging = os.getenv('LAUNCHDARKLY_USE_STAGING_ENDPOINTS', 'false').lower() == 'true'
+
 
 async def async_main():
     # Setup debug logger for ldclient
@@ -37,7 +39,10 @@ async def async_main():
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
 
-    ldclient.set_config(Config(sdk_key))
+    if is_staging:
+        ldclient.set_config(Config(sdk_key, base_uri='ld-stg.launchdarkly.com', stream_uri='https://stream-stg.launchdarkly.com', events_uri='https://events-stg.launchdarkly.com'))
+    else:
+        ldclient.set_config(Config(sdk_key))
     aiclient = LDAIClient(ldclient.get())
 
     if not ldclient.get().is_initialized():

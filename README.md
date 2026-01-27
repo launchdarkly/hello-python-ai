@@ -85,6 +85,7 @@ This example demonstrates how to use LaunchDarkly's judge functionality to evalu
    export LAUNCHDARKLY_SDK_KEY="your-sdk-key"
    export LAUNCHDARKLY_AI_CONFIG_KEY="sample-ai-config"
    export LAUNCHDARKLY_JUDGE_KEY="ld-ai-judge-accuracy"
+   export LAUNCHDARKLY_USE_STAGING_ENDPOINTS="true"
    ```
    Note: The default values are `sample-ai-config` for AI Config and `ld-ai-judge-accuracy` for Judge Config if not specified.
 1. On the command line, run `poetry run judge-example`.
