@@ -14,11 +14,12 @@ gemini-example = 'examples.gemini_example:main'
 langchain-example = 'examples.langchain_example:main'
 langgraph-agent-example = 'examples.langgraph_agent_example:main'
 langgraph-multi-agent-example = 'examples.langgraph_multi_agent_example:main'
-judge-example = 'examples.judge_example:main'
+chat-judge-example = 'examples.chat_judge_example:main'
+direct-judge-example = 'examples.direct_judge_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-launchdarkly-server-sdk-ai = "^0.12.0"
+launchdarkly-server-sdk-ai = "^0.14.0"
 launchdarkly-server-sdk-ai-langchain = "^0.3.0"
 launchdarkly-server-sdk-ai-openai = "^0.1.0"
 

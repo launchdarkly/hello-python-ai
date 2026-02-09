@@ -74,7 +74,7 @@ This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages.
 
 #### Judge setup (judge evaluation)
 
-This example demonstrates how to use LaunchDarkly's judge functionality to evaluate AI responses for accuracy, relevance, and other metrics.
+These examples demonstrate how to use LaunchDarkly's judge functionality to evaluate AI responses for accuracy, relevance, and other metrics.
 
 1. Install dependencies with `poetry install -E langchain` or `poetry install --all-extras`.
 1. Set up API keys for the provider you want to use (OpenAI, Bedrock, or Gemini).
@@ -84,11 +84,11 @@ This example demonstrates how to use LaunchDarkly's judge functionality to evalu
    ```bash
    export LAUNCHDARKLY_SDK_KEY="your-sdk-key"
    export LAUNCHDARKLY_AI_CONFIG_KEY="sample-ai-config"
-   export LAUNCHDARKLY_JUDGE_KEY="ld-ai-judge-accuracy"
+   export LAUNCHDARKLY_AI_JUDGE_KEY="sample-ai-judge-accuracy"
    ```
-   Note: The default values are `sample-ai-config` for AI Config and `ld-ai-judge-accuracy` for Judge Config if not specified.
-1. On the command line, run `poetry run judge-example`.
+   Note: The default values are `sample-ai-config` for AI Config and `sample-ai-judge-accuracy` for Judge Config if not specified.
 
-The example demonstrates two use cases:
-- **Chat with automatic judge evaluation**: Uses the chat functionality which automatically evaluates responses with any judges defined in the AI config.
-- **Direct judge evaluation**: Evaluates specific input/output pairs using a judge configuration.
+##### Available judge examples:
+
+- **Chat with automatic judge evaluation** (`poetry run chat-judge-example`): Uses the chat functionality which automatically evaluates responses with any judges defined in the AI config.
+- **Direct judge evaluation** (`poetry run direct-judge-example`): Evaluates specific input/output pairs using a judge configuration directly.
