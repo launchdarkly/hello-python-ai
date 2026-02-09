@@ -124,12 +124,11 @@ async def async_main():
         print(json.dumps(judge_response_dict, indent=2, default=str))
 
         print("Success.")
-
     except Exception as err:
         print("Error:", err)
-
-    # Close the client to flush events and close the connection.
-    ldclient.get().close()
+    finally:
+        # Close the client to flush events and close the connection.
+        ldclient.get().close()
 
 
 def main():
