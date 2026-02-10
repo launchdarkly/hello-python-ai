@@ -14,16 +14,21 @@ gemini-example = 'examples.gemini_example:main'
 langchain-example = 'examples.langchain_example:main'
 langgraph-agent-example = 'examples.langgraph_agent_example:main'
 langgraph-multi-agent-example = 'examples.langgraph_multi_agent_example:main'
+chat-judge-example = 'examples.chat_judge_example:main'
+direct-judge-example = 'examples.direct_judge_example:main'
 
 [tool.poetry.dependencies]
-python = "^3.9"
-launchdarkly-server-sdk-ai = ">=0.6.0,<1.0.0"
+python = "^3.10"
+launchdarkly-server-sdk-ai = "^0.14.0"
+launchdarkly-server-sdk-ai-langchain = "^0.3.0"
+launchdarkly-server-sdk-ai-openai = "^0.1.0"
 
 boto3 = { version = ">=0.2.0", optional = true }
 openai = { version = ">=0.2.0", optional = true }
 google-genai = { version = "^1.30.0", optional = true }
 langchain = {version = "^0.3.0", optional = true}
 langchain-aws = {version = "^0.2.30", optional = true}
+langchain-core = {version = "^0.3.0", optional = true}
 langchain-google-genai = {version = "^2.1.9", optional = true}
 langchain-openai = {version = "^0.3.30", optional = true}
 langgraph = {version = "^0.2.0", optional = true}
@@ -32,7 +37,7 @@ langgraph = {version = "^0.2.0", optional = true}
 bedrock = ["boto3"]
 openai = ["openai"]
 gemini = ["google-genai"]
-langchain = ["langchain", "langchain-openai", "langchain-google-genai", "langchain-aws"]
+langchain = ["langchain", "langchain-core", "langchain-openai", "langchain-google-genai", "langchain-aws"]
 langgraph = ["langgraph", "typing-extensions"]
 
 [build-system]

@@ -71,3 +71,24 @@ This example uses `OpenAI`, `Bedrock`, and `Gemini` LangChain provider packages.
    export LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY="code-review-documentation"
    ```
 1. On the command line, run `poetry run langgraph-multi-agent-example`.
+
+#### Judge setup (judge evaluation)
+
+These examples demonstrate how to use LaunchDarkly's judge functionality to evaluate AI responses for accuracy, relevance, and other metrics.
+
+1. Install dependencies with `poetry install -E langchain` or `poetry install --all-extras`.
+1. Set up API keys for the provider you want to use (OpenAI, Bedrock, or Gemini).
+1. [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) for chat functionality.
+1. [Create a Judge Config](https://launchdarkly.com/docs/home/ai-configs/judges) for evaluation.
+1. Set the required environment variables:
+   ```bash
+   export LAUNCHDARKLY_SDK_KEY="your-sdk-key"
+   export LAUNCHDARKLY_AI_CONFIG_KEY="sample-ai-config"
+   export LAUNCHDARKLY_AI_JUDGE_KEY="sample-ai-judge-accuracy"
+   ```
+   Note: The default values are `sample-ai-config` for AI Config and `sample-ai-judge-accuracy` for Judge Config if not specified.
+
+##### Available judge examples:
+
+- **Chat with automatic judge evaluation** (`poetry run chat-judge-example`): Uses the chat functionality which automatically evaluates responses with any judges defined in the AI config.
+- **Direct judge evaluation** (`poetry run direct-judge-example`): Evaluates specific input/output pairs using a judge configuration directly.
