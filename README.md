@@ -30,6 +30,25 @@ This repository includes examples for `OpenAI`, `Bedrock`, and `LangChain` for m
 1. Set the environment variable `OPENAI_API_KEY` to your OpenAI key.
 1. On the command line, run `poetry run openai-example`.
 
+#### Chat with observability (observability plugin example)
+
+This example demonstrates how to use the LaunchDarkly observability SDK plugin to monitor AI chat operations. For more details, see the [Python SDK observability reference](https://launchdarkly.com/docs/sdk/observability/python).
+
+1. Install the required dependencies with `poetry install -E observability` or `poetry install --all-extras`.
+1. Set the environment variable for your AI provider (e.g., `OPENAI_API_KEY`), or configure your AI Config to use a different provider.
+1. Optionally, set service identification:
+   ```bash
+   export SERVICE_NAME="my-ai-service"
+   export SERVICE_VERSION="1.0.0"
+   ```
+1. On the command line, run `poetry run chat-observability-example`.
+
+The observability plugin automatically captures and sends data to LaunchDarkly:
+- **Observability tab**: SDK operations, flag evaluations, error monitoring, logging, and distributed tracing
+- **AI Config Monitoring tab**: Token usage, duration, success/error rates, and custom metadata for filtering and analysis
+
+View your data in the LaunchDarkly dashboard under **Observability** tabs.
+
 #### Bedrock setup (single provider)
 
 1. Install the required dependencies with `poetry install -E bedrock` or `poetry install --all-extras`.
