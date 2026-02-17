@@ -15,6 +15,7 @@ langchain-example = 'examples.langchain_example:main'
 langgraph-agent-example = 'examples.langgraph_agent_example:main'
 langgraph-multi-agent-example = 'examples.langgraph_multi_agent_example:main'
 chat-judge-example = 'examples.chat_judge_example:main'
+chat-observability-example = 'examples.chat_observability_example:main'
 direct-judge-example = 'examples.direct_judge_example:main'
 
 [tool.poetry.dependencies]
@@ -22,6 +23,7 @@ python = "^3.10"
 launchdarkly-server-sdk-ai = "^0.14.0"
 launchdarkly-server-sdk-ai-langchain = "^0.3.0"
 launchdarkly-server-sdk-ai-openai = "^0.1.0"
+launchdarkly-observability = { version = ">=0.1.0", optional = true }
 
 boto3 = { version = ">=0.2.0", optional = true }
 openai = { version = ">=0.2.0", optional = true }
@@ -39,6 +41,7 @@ openai = ["openai"]
 gemini = ["google-genai"]
 langchain = ["langchain", "langchain-core", "langchain-openai", "langchain-google-genai", "langchain-aws"]
 langgraph = ["langgraph", "typing-extensions"]
+observability = ["launchdarkly-observability", "openai"]
 
 [build-system]
 requires = ["poetry-core"]
