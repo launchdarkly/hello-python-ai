@@ -38,12 +38,17 @@ async def async_main():
     )
 
     try:
-        # Example using the chat functionality which automates the judge evaluation
-        default_value = AICompletionConfigDefault(
-            enabled=False,
-        )
-
-        chat = await aiclient.create_chat(ai_config_key, context, default_value, {
+        # Pass a default for improved resiliency when the AI config is unavailable
+        # or LaunchDarkly is unreachable; omit for a disabled default.
+        # Example:
+        #   default = AICompletionConfigDefault(
+        #       enabled=True,
+        #       model={'name': 'gpt-4'},
+        #       provider={'name': 'openai'},
+        #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
+        #   )
+        #   chat = await aiclient.create_chat(ai_config_key, context, default, {'companyName': 'LaunchDarkly'})
+        chat = await aiclient.create_chat(ai_config_key, context, variables={
             'companyName': 'LaunchDarkly',
         })
 

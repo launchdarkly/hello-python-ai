@@ -4,7 +4,7 @@ import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai import LDAIClient, AICompletionConfigDefault
+from ldai import LDAIClient, AIJudgeConfigDefault
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -38,12 +38,21 @@ async def async_main():
     )
 
     try:
-        # Example of using the judge functionality with direct input and output
-        # Get AI judge configuration from LaunchDarkly
-        judge_default_value = AICompletionConfigDefault(
-            enabled=False,
-        )
-        judge = await aiclient.create_judge(judge_key, context, judge_default_value)
+        # Pass a default for improved resiliency when the AI config is unavailable
+        # or LaunchDarkly is unreachable; omit for a disabled default.
+        # Example (enabled default; judge default has three messages):
+        #   default = AIJudgeConfigDefault(
+        #       enabled=True,
+        #       model={'name': 'gpt-4'},
+        #       provider={'name': 'openai'},
+        #       messages=[
+        #           {'role': 'system', 'content': 'Your judge criteria here.'},
+        #           {'role': 'assistant', 'content': 'MESSAGE HISTORY: {{message_history}}'},
+        #           {'role': 'user', 'content': 'RESPONSE TO EVALUATE: {{response_to_evaluate}}'},
+        #       ],
+        #   )
+        #   judge = await aiclient.create_judge(judge_key, context, default)
+        judge = await aiclient.create_judge(judge_key, context)
 
         if not judge:
             print(f"*** AI judge configuration is not enabled for key: {judge_key}")

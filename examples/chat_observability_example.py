@@ -58,14 +58,20 @@ async def async_main():
     )
 
     try:
-        # Create a chat instance with custom variables
-        default_value = AICompletionConfigDefault(enabled=False)
-        
+        # Pass a default for improved resiliency when the AI config is unavailable
+        # or LaunchDarkly is unreachable; omit for a disabled default.
+        # Example:
+        #   default = AICompletionConfigDefault(
+        #       enabled=True,
+        #       model={'name': 'gpt-4'},
+        #       provider={'name': 'openai'},
+        #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
+        #   )
+        #   chat = await aiclient.create_chat(ai_config_key, context, default, {'example_type': 'observability_demo'})
         chat = await aiclient.create_chat(
-            ai_config_key, 
-            context, 
-            default_value, 
-            {
+            ai_config_key,
+            context,
+            variables={
                 'example_type': 'observability_demo',
                 'session_id': 'demo-session-123',
                 'feature': 'ai_chat'
