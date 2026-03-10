@@ -92,7 +92,7 @@ def main():
     #       enabled=True,
     #       instructions='You are a helpful assistant.',
     #   )
-    #   agent_config = aiclient.agent_config(LDAIAgentConfig(key=agent_config_key, default=default), context)
+    #   agent_config = aiclient.agent_config(agent_config_key, context, default=default)
     agent_config = aiclient.agent_config(
         LDAIAgentConfig(
             key=agent_config_key,

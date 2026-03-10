@@ -64,6 +64,10 @@ async def async_main():
         chat_response = await chat.invoke(user_input)
         print("Chat Response:", chat_response.message.content)
 
+        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
+        # complete before the process or request ends—even if you don't need to log or use
+        # the results. Below we await and then log the results for demonstration.
+
         # Log judge evaluation results with full detail
         if chat_response.evaluations is not None and len(chat_response.evaluations) > 0:
             # Note: Judge evaluations run asynchronously and do not block your application.
