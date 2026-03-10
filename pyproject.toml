@@ -20,7 +20,7 @@ direct-judge-example = 'examples.direct_judge_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-launchdarkly-server-sdk-ai = "^0.15.0"
+launchdarkly-server-sdk-ai = "^0.16.0"
 launchdarkly-server-sdk-ai-langchain = "^0.3.0"
 launchdarkly-server-sdk-ai-openai = "^0.1.0"
 launchdarkly-observability = { version = ">=0.1.0", optional = true }

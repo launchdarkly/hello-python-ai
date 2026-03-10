@@ -58,14 +58,20 @@ async def async_main():
     )
 
     try:
-        # Create a chat instance with custom variables
-        default_value = AICompletionConfigDefault(enabled=False)
-        
+        # Pass a default for improved resiliency when the AI config is unavailable
+        # or LaunchDarkly is unreachable; omit for a disabled default.
+        # Example:
+        #   default = AICompletionConfigDefault(
+        #       enabled=True,
+        #       model={'name': 'gpt-4'},
+        #       provider={'name': 'openai'},
+        #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
+        #   )
+        #   chat = await aiclient.create_chat(ai_config_key, context, default, {'example_type': 'observability_demo'})
         chat = await aiclient.create_chat(
-            ai_config_key, 
-            context, 
-            default_value, 
-            {
+            ai_config_key,
+            context,
+            variables={
                 'example_type': 'observability_demo',
                 'session_id': 'demo-session-123',
                 'feature': 'ai_chat'
@@ -84,9 +90,17 @@ async def async_main():
 
         user_input_2 = "Give me a specific use case example."
         print("\nUser Input:", user_input_2)
-        
+
         response_2 = await chat.invoke(user_input_2)
         print("Chat Response:", response_2.message.content)
+
+        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
+        # complete before the process or request ends—even if you don't need to log or use
+        # the results.
+        if response_1.evaluations:
+            await asyncio.gather(*response_1.evaluations)
+        if response_2.evaluations:
+            await asyncio.gather(*response_2.evaluations)
 
         print("\nSuccess.")
 

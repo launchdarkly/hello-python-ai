@@ -38,12 +38,17 @@ async def async_main():
     )
 
     try:
-        # Example using the chat functionality which automates the judge evaluation
-        default_value = AICompletionConfigDefault(
-            enabled=False,
-        )
-
-        chat = await aiclient.create_chat(ai_config_key, context, default_value, {
+        # Pass a default for improved resiliency when the AI config is unavailable
+        # or LaunchDarkly is unreachable; omit for a disabled default.
+        # Example:
+        #   default = AICompletionConfigDefault(
+        #       enabled=True,
+        #       model={'name': 'gpt-4'},
+        #       provider={'name': 'openai'},
+        #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
+        #   )
+        #   chat = await aiclient.create_chat(ai_config_key, context, default, {'companyName': 'LaunchDarkly'})
+        chat = await aiclient.create_chat(ai_config_key, context, variables={
             'companyName': 'LaunchDarkly',
         })
 
@@ -58,6 +63,10 @@ async def async_main():
         # The invoke method will automatically evaluate the chat response with any judges defined in the AI config
         chat_response = await chat.invoke(user_input)
         print("Chat Response:", chat_response.message.content)
+
+        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
+        # complete before the process or request ends—even if you don't need to log or use
+        # the results. Below we await and then log the results for demonstration.
 
         # Log judge evaluation results with full detail
         if chat_response.evaluations is not None and len(chat_response.evaluations) > 0:

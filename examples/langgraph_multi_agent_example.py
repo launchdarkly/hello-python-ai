@@ -73,14 +73,17 @@ def track_langgraph_metrics(tracker, func, prev_message_count=0):
 
 def create_agent_with_config(aiclient, config_key, context):
     """Create a LangChain model with LaunchDarkly AI config."""
-    default_value = LDAIAgentDefaults(
-        enabled=False,  # Disabled by default
-    )
-
-    agent_config = aiclient.agent(
+    # Pass a default for improved resiliency when the agent config is unavailable
+    # or LaunchDarkly is unreachable; omit for a disabled default.
+    # Example (enabled default):
+    #   default = LDAIAgentDefaults(
+    #       enabled=True,
+    #       instructions='You are a helpful assistant.',
+    #   )
+    #   agent_config = aiclient.agent_config(LDAIAgentConfig(key=config_key, default=default), context)
+    agent_config = aiclient.agent_config(
         LDAIAgentConfig(
             key=config_key,
-            default_value=default_value,
         ),
         context
     )

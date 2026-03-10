@@ -110,26 +110,20 @@ def main():
         .build()
     )
 
-    DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant that can answer questions and help with tasks."
-
-    # Set a fallback AIConfig to use if a config is not found or your application is not able to connect to LaunchDarkly.
-    default_value = AIConfig(
-        enabled=True,
-        model=ModelConfig(name='gemini-pro', parameters={}),
-        provider=ProviderConfig(name='google'),
-        messages=[LDMessage(role='system', content=DEFAULT_SYSTEM_MESSAGE)],
-    )
-
-    # Optionally, you can use a disabled AIConfig
-    # default_value = AIConfig(
-    #     enabled=False
-    # )
-
+    # Pass a default for improved resiliency when the AI config is unavailable
+    # or LaunchDarkly is unreachable; omit for a disabled default.
+    # Example:
+    #   default = AIConfig(
+    #       enabled=True,
+    #       model=ModelConfig(name='gemini-pro'),
+    #       provider=ProviderConfig(name='google'),
+    #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
+    #   )
+    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
     config_value, tracker = aiclient.config(
         ai_config_key,
         context,
-        default_value,
-        {'myUserVariable': "Testing Variable"}
+        variables={'myUserVariable': "Testing Variable"}
     )
 
     if not config_value.enabled:
