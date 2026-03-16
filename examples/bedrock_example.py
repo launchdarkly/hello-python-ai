@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.client import LDAIClient, AICompletionConfigDefault, ModelConfig, ProviderConfig, LDMessage
 import boto3
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
@@ -43,14 +43,14 @@ def main():
     # Pass a default for improved resiliency when the AI config is unavailable
     # or LaunchDarkly is unreachable; omit for a disabled default.
     # Example:
-    #   default = AIConfig(
+    #   default = AICompletionConfigDefault(
     #       enabled=True,
     #       model=ModelConfig(name='my-default-model'),
     #       provider=ProviderConfig(name='bedrock'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
@@ -69,7 +69,7 @@ def main():
     print("User Input:\n", USER_INPUT)
     chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT}]})
 
-    converse = tracker.track_bedrock_converse_metrics(
+    converse = config_value.tracker.track_bedrock_converse_metrics(
         client.converse(
             modelId=config_value.model.name,
             messages=chat_messages,

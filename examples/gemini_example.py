@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.client import LDAIClient, AICompletionConfigDefault, ModelConfig, ProviderConfig, LDMessage
 from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types
@@ -113,14 +113,14 @@ def main():
     # Pass a default for improved resiliency when the AI config is unavailable
     # or LaunchDarkly is unreachable; omit for a disabled default.
     # Example:
-    #   default = AIConfig(
+    #   default = AICompletionConfigDefault(
     #       enabled=True,
     #       model=ModelConfig(name='gemini-pro'),
     #       provider=ProviderConfig(name='google'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
@@ -144,7 +144,7 @@ def main():
     user_message = types.Content(role="user", parts=[types.Part(text=USER_INPUT)])
     messages.append(user_message)
 
-    completion = track_genai_metrics(tracker, lambda: client.models.generate_content(
+    completion = track_genai_metrics(config_value.tracker, lambda: client.models.generate_content(
         model=config_value.model.name,
         contents=messages,
         config=types.GenerateContentConfig(

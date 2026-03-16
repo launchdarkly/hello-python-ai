@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.client import LDAIClient, AICompletionConfigDefault, ModelConfig, ProviderConfig, LDMessage
 from ldai.tracker import TokenUsage
 from langchain.chat_models import init_chat_model
 
@@ -86,14 +86,14 @@ def main():
     # Pass a default for improved resiliency when the AI config is unavailable
     # or LaunchDarkly is unreachable; omit for a disabled default.
     # Example:
-    #   default = AIConfig(
+    #   default = AICompletionConfigDefault(
     #       enabled=True,
     #       model=ModelConfig(name='gpt-4'),
     #       provider=ProviderConfig(name='openai'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
@@ -121,7 +121,7 @@ def main():
         messages.append({'role': 'user', 'content': USER_INPUT})
 
         # Track the LangChain completion with LaunchDarkly metrics
-        completion = track_langchain_metrics(tracker, lambda: llm.invoke(messages))
+        completion = track_langchain_metrics(config_value.tracker, lambda: llm.invoke(messages))
         ai_response = completion.content
 
         # Add the AI response to the conversation history.
