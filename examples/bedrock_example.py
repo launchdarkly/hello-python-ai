@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.client import LDAIClient
 import boto3
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
@@ -49,12 +49,13 @@ def main():
     #       provider=ProviderConfig(name='bedrock'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.completion_config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.completion_config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
+    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")

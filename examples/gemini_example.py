@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
+from ldai.client import LDAIClient, LDMessage
 from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types
@@ -119,12 +119,13 @@ def main():
     #       provider=ProviderConfig(name='google'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.completion_config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.completion_config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
+    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")
