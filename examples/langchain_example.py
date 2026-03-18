@@ -1,9 +1,10 @@
 import os
+import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIConfig, ModelConfig, ProviderConfig, LDMessage
-from ldai.tracker import TokenUsage
+from ldai.client import LDAIClient
+from ldai_langchain import LangChainProvider
 from langchain.chat_models import init_chat_model
 
 # Set sdk_key to your LaunchDarkly SDK key.
@@ -21,43 +22,7 @@ def map_provider_to_langchain(provider_name):
     lower_provider = provider_name.lower()
     return provider_mapping.get(lower_provider, lower_provider)
 
-def track_langchain_metrics(tracker, func):
-    """
-    Track LangChain-specific operations.
-
-    This function will track the duration of the operation, the token
-    usage, and the success or error status.
-
-    If the provided function throws, then this method will also throw.
-
-    In the case the provided function throws, this function will record the
-    duration and an error.
-
-    A failed operation will not have any token usage data.
-
-    :param tracker: The LaunchDarkly tracker instance.
-    :param func: Function to track.
-    :return: Result of the tracked function.
-    """
-    try:
-        result = tracker.track_duration_of(func)
-        tracker.track_success()
-        if hasattr(result, "usage_metadata") and result.usage_metadata:
-            # Extract token usage from LangChain response
-            usage_data = result.usage_metadata
-            token_usage = TokenUsage(
-                input=usage_data.get("input_tokens", 0),
-                output=usage_data.get("output_tokens", 0),
-                total=usage_data.get("total_tokens", 0) # LangChain also has values for input_token_details { cache_creation, cache_read }
-            )
-            tracker.track_tokens(token_usage)
-    except Exception:
-        tracker.track_error()
-        raise
-
-    return result
-
-def main():
+async def async_main():
     if not sdk_key:
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
@@ -92,12 +57,13 @@ def main():
     #       provider=ProviderConfig(name='openai'),
     #       messages=[LDMessage(role='system', content='You are a helpful assistant.')],
     #   )
-    #   config_value, tracker = aiclient.config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
-    config_value, tracker = aiclient.config(
+    #   config_value = aiclient.completion_config(ai_config_key, context, default, {'myUserVariable': "Testing Variable"})
+    config_value = aiclient.completion_config(
         ai_config_key,
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
+    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")
@@ -120,8 +86,11 @@ def main():
         print("User Input:\n", USER_INPUT)
         messages.append({'role': 'user', 'content': USER_INPUT})
 
-        # Track the LangChain completion with LaunchDarkly metrics
-        completion = track_langchain_metrics(tracker, lambda: llm.invoke(messages))
+        # Track the LangChain completion with LaunchDarkly metrics using the LD LangChain provider's extractor
+        completion = await tracker.track_metrics_of(
+            lambda: llm.ainvoke(messages),
+            LangChainProvider.get_ai_metrics_from_response,
+        )
         ai_response = completion.content
 
         # Add the AI response to the conversation history.
@@ -137,6 +106,10 @@ def main():
 
     # Close the client to flush events and close the connection.
     ldclient.get().close()
+
+
+def main():
+    asyncio.run(async_main())
 
 
 if __name__ == "__main__":
