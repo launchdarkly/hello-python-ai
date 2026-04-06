@@ -4,7 +4,7 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
-from ldai_langchain import LangChainProvider
+from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model
 
 # Set sdk_key to your LaunchDarkly SDK key.
@@ -89,7 +89,7 @@ async def async_main():
         # Track the LangChain completion with LaunchDarkly metrics using the LD LangChain provider's extractor
         completion = await tracker.track_metrics_of(
             lambda: llm.ainvoke(messages),
-            LangChainProvider.get_ai_metrics_from_response,
+            get_ai_metrics_from_response,
         )
         ai_response = completion.content
 
