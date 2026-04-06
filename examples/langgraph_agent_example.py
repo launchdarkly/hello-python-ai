@@ -5,7 +5,7 @@ from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
 from ldai.tracker import TokenUsage
-from ldai_langchain import LangChainProvider
+from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
 
@@ -36,7 +36,7 @@ def track_langgraph_metrics(tracker, func):
         total_tokens = 0
         if "messages" in result:
             for message in result["messages"]:
-                metrics = LangChainProvider.get_ai_metrics_from_response(message)
+                metrics = get_ai_metrics_from_response(message)
                 if metrics.usage:
                     total_input_tokens += metrics.usage.input
                     total_output_tokens += metrics.usage.output
