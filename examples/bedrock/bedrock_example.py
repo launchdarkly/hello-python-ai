@@ -58,11 +58,12 @@ def main():
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
-    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")
         return
+
+    tracker = config_value.create_tracker()
 
     # Map the messages to the format expected by Bedrock
     chat_messages = [{'role': msg.role, 'content': [{'text': msg.content}]} for msg in config_value.messages if msg.role != 'system']

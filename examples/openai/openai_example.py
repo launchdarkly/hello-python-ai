@@ -60,11 +60,12 @@ def main():
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
-    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")
         return
+
+    tracker = config_value.create_tracker()
     
     messages = [message.to_dict() for message in (config_value.messages or [])]
 

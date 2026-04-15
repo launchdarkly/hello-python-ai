@@ -115,7 +115,7 @@ def main():
 
     try:
         # Track and execute the agent
-        response = track_langgraph_metrics(agent_config.tracker, lambda: agent.invoke({
+        response = track_langgraph_metrics(agent_config.create_tracker(), lambda: agent.invoke({
             "messages": [{"role": "user", "content": "What is the weather in Tokyo?"}]
         }))
         
