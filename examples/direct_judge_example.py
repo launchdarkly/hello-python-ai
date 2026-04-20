@@ -4,7 +4,7 @@ import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AIJudgeConfigDefault
+from ldai import LDAIClient, AIJudgeConfigDefault
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')

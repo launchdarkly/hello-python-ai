@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, LDMessage
+from ldai import LDAIClient, LDMessage
 from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types

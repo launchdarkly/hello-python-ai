@@ -4,7 +4,7 @@ import logging
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, AICompletionConfigDefault
+from ldai import LDAIClient, AICompletionConfigDefault
 from ldobserve import ObservabilityConfig, ObservabilityPlugin
 
 logging.getLogger('ldclient').setLevel(logging.WARNING)

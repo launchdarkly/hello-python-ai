@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient
 from ldai.tracker import TokenUsage
 from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model

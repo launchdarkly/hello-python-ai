@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient
 import boto3
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")

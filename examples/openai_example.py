@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient
 from ldai_openai import get_ai_metrics_from_response
 from openai import OpenAI
 
