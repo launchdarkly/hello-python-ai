@@ -104,7 +104,8 @@ async def async_main():
         print(f"Error during completion: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected provider.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
 
 

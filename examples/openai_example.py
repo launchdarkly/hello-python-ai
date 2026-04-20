@@ -3,6 +3,7 @@ import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai.client import LDAIClient
+from ldai_openai import get_ai_metrics_from_response
 from openai import OpenAI
 
 openai_client = OpenAI()
@@ -69,13 +70,14 @@ def main():
     print("User Input:\n", USER_INPUT)
     messages.append({'role': 'user', 'content': USER_INPUT})
 
-    # Track the OpenAI completion with LaunchDarkly metrics
-    completion = tracker.track_openai_metrics(
+    # Track the OpenAI completion with LaunchDarkly metrics using the LD OpenAI provider's extractor
+    completion = tracker.track_metrics_of(
         lambda:
             openai_client.chat.completions.create(
                 model=config_value.model.name,
                 messages=messages,
-            )
+            ),
+        get_ai_metrics_from_response,
     )
     ai_response = completion.choices[0].message.content
 
@@ -86,5 +88,6 @@ def main():
     # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()

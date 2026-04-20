@@ -4,7 +4,7 @@ import logging
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai import LDAIClient, AICompletionConfigDefault
+from ldai.client import LDAIClient, AICompletionConfigDefault
 from ldobserve import ObservabilityConfig, ObservabilityPlugin
 
 logging.getLogger('ldclient').setLevel(logging.WARNING)
@@ -67,8 +67,8 @@ async def async_main():
         #       provider={'name': 'openai'},
         #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
         #   )
-        #   chat = await aiclient.create_chat(ai_config_key, context, default, {'example_type': 'observability_demo'})
-        chat = await aiclient.create_chat(
+        #   chat = await aiclient.create_model(ai_config_key, context, default, {'example_type': 'observability_demo'})
+        chat = await aiclient.create_model(
             ai_config_key,
             context,
             variables={
@@ -107,6 +107,8 @@ async def async_main():
     except Exception as err:
         print("Error:", err)
     finally:
+        # Flush pending events and close the client.
+        ldclient.get().flush()
         ldclient.get().close()
 
 

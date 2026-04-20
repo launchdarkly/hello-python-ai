@@ -162,7 +162,8 @@ def main():
     # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
 
 if __name__ == "__main__":

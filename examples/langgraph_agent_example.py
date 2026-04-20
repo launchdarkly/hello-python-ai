@@ -123,7 +123,8 @@ def main():
         print(f"Error: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
 
 if __name__ == "__main__":

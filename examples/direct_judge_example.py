@@ -4,7 +4,7 @@ import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai import LDAIClient, AIJudgeConfigDefault
+from ldai.client import LDAIClient, AIJudgeConfigDefault
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -86,7 +86,8 @@ async def async_main():
     except Exception as err:
         print("Error:", err)
     finally:
-        # Close the client to flush events and close the connection.
+        # Flush pending events and close the client.
+        ldclient.get().flush()
         ldclient.get().close()
 
 
