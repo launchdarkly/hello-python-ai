@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient, LDMessage
+from ldai import LDAIClient, LDMessage
 from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types
@@ -162,7 +162,8 @@ def main():
     # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
 
 if __name__ == "__main__":

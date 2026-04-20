@@ -86,7 +86,8 @@ async def async_main():
     except Exception as err:
         print("Error:", err)
     finally:
-        # Close the client to flush events and close the connection.
+        # Flush pending events and close the client.
+        ldclient.get().flush()
         ldclient.get().close()
 
 

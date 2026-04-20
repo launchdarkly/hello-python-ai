@@ -3,7 +3,7 @@ import ldclient
 from pprint import pprint
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient
 from ldai.tracker import TokenUsage
 from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model
@@ -123,7 +123,8 @@ def main():
         print(f"Error: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
 
 if __name__ == "__main__":

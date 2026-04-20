@@ -2,7 +2,7 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai.client import LDAIClient
+from ldai import LDAIClient
 import boto3
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
@@ -85,5 +85,6 @@ def main():
     # Continue the conversation by adding user input to the messages list and invoking the LLM again.
     print("Success.")
 
-    # Close the client to flush events and close the connection.
+    # Flush pending events and close the client.
+    ldclient.get().flush()
     ldclient.get().close()
