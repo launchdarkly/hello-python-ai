@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai import LDAIClient
 import boto3
+
+load_dotenv()
 
 client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
