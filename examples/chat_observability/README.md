@@ -18,7 +18,7 @@ View your data in the LaunchDarkly dashboard under **Observability** tabs.
 
 ## Setup
 
-1. Create a `.env` file in the repository root with the following variables:
+1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
@@ -38,7 +38,7 @@ View your data in the LaunchDarkly dashboard under **Observability** tabs.
 2. Install the required dependencies:
 
    ```bash
-   poetry install -E observability
+   poetry install
    ```
 
 ## Run

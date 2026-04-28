@@ -11,7 +11,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with the AWS Bedro
 
 ## Setup
 
-1. Create a `.env` file in the repository root with the following variables:
+1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
@@ -33,7 +33,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with the AWS Bedro
 3. Install the required dependencies:
 
    ```bash
-   poetry install -E bedrock
+   poetry install
    ```
 
 ## Run

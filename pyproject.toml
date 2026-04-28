@@ -1,48 +1,13 @@
 [tool.poetry]
 name = "hello-python-ai"
 version = "0.1.0"
-description = "Hello LaunchDarkly for Python AI - OpenAI"
+description = "Hello LaunchDarkly for Python AI"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [ { include = "examples" } ]
-
-[tool.poetry.scripts]
-bedrock-example = 'examples.bedrock.bedrock_example:main'
-openai-example = 'examples.openai.openai_example:main'
-gemini-example = 'examples.gemini.gemini_example:main'
-langchain-example = 'examples.langchain.langchain_example:main'
-langgraph-agent-example = 'examples.langgraph_agent.langgraph_agent_example:main'
-langgraph-multi-agent-example = 'examples.langgraph_multi_agent.langgraph_multi_agent_example:main'
-chat-judge-example = 'examples.judge.chat_judge_example:main'
-chat-observability-example = 'examples.chat_observability.chat_observability_example:main'
-direct-judge-example = 'examples.judge.direct_judge_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-dotenv = ">=1.0.0"
-launchdarkly-server-sdk-ai = "^0.17.0"
-launchdarkly-server-sdk-ai-langchain = "^0.4.0"
-launchdarkly-server-sdk-ai-openai = "^0.3.0"
-launchdarkly-observability = { version = ">=0.1.0", optional = true }
-
-boto3 = { version = ">=0.2.0", optional = true }
-openai = { version = ">=0.2.0", optional = true }
-google-genai = { version = "^1.30.0", optional = true }
-langchain = {version = "^1.0.0", optional = true}
-langchain-aws = {version = "^1.0.0", optional = true}
-langchain-core = {version = "^1.0.0", optional = true}
-langchain-google-genai = {version = "^4.0.0", optional = true}
-langchain-openai = {version = "^1.0.0", optional = true}
-langgraph = {version = "^1.0.0", optional = true}
-
-[tool.poetry.extras]
-bedrock = ["boto3"]
-openai = ["openai"]
-gemini = ["google-genai"]
-langchain = ["langchain", "langchain-core", "langchain-openai", "langchain-google-genai", "langchain-aws"]
-langgraph = ["langgraph", "typing-extensions"]
-observability = ["launchdarkly-observability", "openai"]
 
 [build-system]
 requires = ["poetry-core"]

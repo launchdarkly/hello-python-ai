@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "hello-python-ai-chat-observability"
+version = "0.1.0"
+description = "Hello LaunchDarkly for Python AI - Chat with Observability"
+authors = ["LaunchDarkly <dev@launchdarkly.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "chat_observability_example.py"}]
+
+[tool.poetry.scripts]
+chat-observability-example = "chat_observability_example:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = ">=1.0.0"
+launchdarkly-server-sdk-ai = "^0.17.0"
+launchdarkly-observability = ">=0.1.0"
+openai = ">=0.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

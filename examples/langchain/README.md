@@ -11,7 +11,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangChain, su
 
 ## Setup
 
-1. Create a `.env` file in the repository root with the following variables:
+1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
@@ -32,7 +32,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangChain, su
 2. Install the required dependencies:
 
    ```bash
-   poetry install -E langchain
+   poetry install
    ```
 
 ## Run
