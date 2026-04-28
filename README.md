@@ -32,7 +32,7 @@ This repository includes examples for `OpenAI`, `Bedrock`, `Gemini`, `LangChain`
 | **Bedrock** | Single provider using AWS Bedrock | [examples/bedrock](examples/bedrock/README.md) |
 | **Gemini** | Single provider using Google Gemini | [examples/gemini](examples/gemini/README.md) |
 | **LangChain** | Multiple providers via LangChain | [examples/langchain](examples/langchain/README.md) |
-| **LangGraph Agent** | Single agent using LangGraph | [examples/langgraph-agent](examples/langgraph-agent/README.md) |
-| **LangGraph Multi-Agent** | Multiple agents using LangGraph | [examples/langgraph-multi-agent](examples/langgraph-multi-agent/README.md) |
+| **LangGraph Agent** | Single agent using LangGraph | [examples/langgraph_agent](examples/langgraph_agent/README.md) |
+| **LangGraph Multi-Agent** | Multiple agents using LangGraph | [examples/langgraph_multi_agent](examples/langgraph_multi_agent/README.md) |
 | **Judge** | Judge evaluation of AI responses | [examples/judge](examples/judge/README.md) |
-| **Chat with Observability** | Observability plugin for AI chat monitoring | [examples/chat-observability](examples/chat-observability/README.md) |
+| **Chat with Observability** | Observability plugin for AI chat monitoring | [examples/chat_observability](examples/chat_observability/README.md) |

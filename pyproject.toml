@@ -6,6 +6,11 @@ authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 
+# Each example is self-contained with its own pyproject.toml.
+# To run an example, cd into its directory under examples/ and run:
+#   poetry install && poetry run <example-name>
+# See each example's README for details.
+
 [tool.poetry.dependencies]
 python = "^3.10"
 

@@ -15,7 +15,7 @@ python = "^3.10"
 python-dotenv = ">=1.0.0"
 launchdarkly-server-sdk-ai = "^0.17.0"
 launchdarkly-server-sdk-ai-openai = "^0.3.0"
-openai = ">=0.2.0"
+openai = ">=1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

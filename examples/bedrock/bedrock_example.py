@@ -8,7 +8,7 @@ import boto3
 
 load_dotenv()
 
-client = boto3.client("bedrock-runtime", region_name="us-east-1")
+client = boto3.client("bedrock-runtime", region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1'))
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
