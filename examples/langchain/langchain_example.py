@@ -91,9 +91,9 @@ async def async_main():
         messages.append({'role': 'user', 'content': USER_INPUT})
 
         # Track the LangChain completion with LaunchDarkly metrics using the LD LangChain provider's extractor
-        completion = await tracker.track_metrics_of(
-            lambda: llm.ainvoke(messages),
+        completion = await tracker.track_metrics_of_async(
             get_ai_metrics_from_response,
+            lambda: llm.ainvoke(messages),
         )
         ai_response = completion.content
 

@@ -88,22 +88,22 @@ async def async_main():
         user_input_1 = "What is feature flagging in 2 sentences?"
         print("User Input:", user_input_1)
         
-        response_1 = await chat.invoke(user_input_1)
-        print("Chat Response:", response_1.message.content)
+        response_1 = await chat.run(user_input_1)
+        print("Chat Response:", response_1.content)
 
         user_input_2 = "Give me a specific use case example."
         print("\nUser Input:", user_input_2)
 
-        response_2 = await chat.invoke(user_input_2)
-        print("Chat Response:", response_2.message.content)
+        response_2 = await chat.run(user_input_2)
+        print("Chat Response:", response_2.content)
 
-        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
+        # Judge evaluations run asynchronously. Await them so they
         # complete before the process or request ends—even if you don't need to log or use
         # the results.
-        if response_1.evaluations:
-            await asyncio.gather(*response_1.evaluations)
-        if response_2.evaluations:
-            await asyncio.gather(*response_2.evaluations)
+        if response_1.evaluations is not None:
+            await response_1.evaluations
+        if response_2.evaluations is not None:
+            await response_2.evaluations
 
         print("\nSuccess.")
 

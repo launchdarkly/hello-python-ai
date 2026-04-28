@@ -66,7 +66,7 @@ def main():
         return
 
     tracker = config_value.create_tracker()
-    
+
     messages = [message.to_dict() for message in (config_value.messages or [])]
 
     # Add the user input to the conversation
@@ -76,12 +76,12 @@ def main():
 
     # Track the OpenAI completion with LaunchDarkly metrics using the LD OpenAI provider's extractor
     completion = tracker.track_metrics_of(
+        get_ai_metrics_from_response,
         lambda:
             openai_client.chat.completions.create(
                 model=config_value.model.name,
                 messages=messages,
             ),
-        get_ai_metrics_from_response,
     )
     ai_response = completion.choices[0].message.content
 

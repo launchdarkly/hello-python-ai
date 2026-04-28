@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-import json
 import asyncio
 import ldclient
 from ldclient import Context
@@ -13,7 +12,7 @@ load_dotenv()
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set judge_key to the Judge key you want to use.
-judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge-accuracy')
+judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge')
 
 
 async def async_main():
@@ -54,8 +53,8 @@ async def async_main():
         #           {'role': 'user', 'content': 'RESPONSE TO EVALUATE: {{response_to_evaluate}}'},
         #       ],
         #   )
-        #   judge = await aiclient.create_judge(judge_key, context, default)
-        judge = await aiclient.create_judge(judge_key, context)
+        #   judge = aiclient.create_judge(judge_key, context, default)
+        judge = aiclient.create_judge(judge_key, context)
 
         if not judge:
             print(f"*** Failed to create judge for key: {judge_key}")
@@ -70,20 +69,26 @@ async def async_main():
 
         judge_response = await judge.evaluate(input_text, output_text)
 
-        if judge_response is None:
-            print("\nJudge evaluation was skipped.")
-            print("This typically happens when the sample rate doesn't require this evaluation, or due to a configuration issue.")
-            print("Check application logs for more details.")
-            return
-
         # Track the judge evaluation scores on the tracker for the aiConfig you are evaluating
         # Example:
         # aiConfig.tracker.track_eval_scores(judge_response.evals)
 
-        # Convert JudgeResponse to dict for display using to_dict()
-        judge_response_dict = judge_response.to_dict()
         print("Judge Response:")
-        print(json.dumps(judge_response_dict, indent=2, default=str))
+        print(f"  sampled: {judge_response.sampled}")
+        print(f"  success: {judge_response.success}")
+        if judge_response.error_message is not None:
+            print(f"  error_message: {judge_response.error_message}")
+        if judge_response.metric_key is not None:
+            print(f"  metric_key: {judge_response.metric_key}")
+        if judge_response.score is not None:
+            print(f"  score: {judge_response.score}")
+        if judge_response.reasoning is not None:
+            print(f"  reasoning: {judge_response.reasoning}")
+
+        if not judge_response.sampled:
+            print("\nNote: Judge evaluation was not sampled.")
+            print("This typically happens when the sample rate doesn't require this evaluation, or due to a configuration issue.")
+            print("Check application logs for more details.")
 
         print("Success.")
     except Exception as err:

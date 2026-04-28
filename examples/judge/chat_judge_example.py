@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-import json
 import asyncio
 import ldclient
 from ldclient import Context
@@ -63,33 +62,38 @@ async def async_main():
         user_input = 'How can LaunchDarkly help me?'
         print("User Input:", user_input)
 
-        # The invoke method will automatically evaluate the chat response with any judges defined in the AI config
-        chat_response = await chat.invoke(user_input)
-        print("Chat Response:", chat_response.message.content)
+        # The run method will automatically evaluate the chat response with any judges defined in the AI config
+        chat_response = await chat.run(user_input)
+        print("Chat Response:", chat_response.content)
 
-        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
-        # complete before the process or request ends—even if you don't need to log or use
-        # the results. Below we await and then log the results for demonstration.
+        # Judge evaluations run asynchronously. Await them so they complete before the
+        # process or request ends—even if you don't need to log or use the results.
+        # Below we await and then log the results for demonstration.
 
         # Log judge evaluation results with full detail
-        if chat_response.evaluations is not None and len(chat_response.evaluations) > 0:
+        if chat_response.evaluations is not None:
             # Note: Judge evaluations run asynchronously and do not block your application.
             # Results are automatically sent to LaunchDarkly for AI config metrics.
             # You only need to await if you want to access the evaluation results in your code.
             print("\nNote: Awaiting judge results (optional - done here for demonstration only).")
-            eval_results = await asyncio.gather(*chat_response.evaluations)
-            
-            # Convert results, replacing None with a message
-            results_to_display = [
-                result.to_dict() if result is not None else "not evaluated" 
-                for result in eval_results
-            ]
-            
+            eval_results = await chat_response.evaluations
+
             print("Judge results:")
-            print(json.dumps(results_to_display, indent=2, default=str))
-            
-            if None in eval_results:
-                print("\nNote: Some judge evaluations were skipped.")
+            for result in eval_results:
+                print(f"  - sampled: {result.sampled}")
+                print(f"    success: {result.success}")
+                if result.error_message is not None:
+                    print(f"    error_message: {result.error_message}")
+                if result.metric_key is not None:
+                    print(f"    metric_key: {result.metric_key}")
+                if result.score is not None:
+                    print(f"    score: {result.score}")
+                if result.reasoning is not None:
+                    print(f"    reasoning: {result.reasoning}")
+
+            skipped = [r for r in eval_results if not r.sampled]
+            if skipped:
+                print("\nNote: Some judge evaluations were skipped (not sampled).")
                 print("This typically happens when the sample rate doesn't require this evaluation, or due to a configuration issue.")
                 print("Check application logs for more details.")
         else:
