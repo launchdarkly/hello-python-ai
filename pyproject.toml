@@ -8,15 +8,15 @@ readme = "README.md"
 packages = [ { include = "examples" } ]
 
 [tool.poetry.scripts]
-bedrock-example = 'examples.bedrock_example:main'
-openai-example = 'examples.openai_example:main'
-gemini-example = 'examples.gemini_example:main'
-langchain-example = 'examples.langchain_example:main'
-langgraph-agent-example = 'examples.langgraph_agent_example:main'
-langgraph-multi-agent-example = 'examples.langgraph_multi_agent_example:main'
-chat-judge-example = 'examples.chat_judge_example:main'
-chat-observability-example = 'examples.chat_observability_example:main'
-direct-judge-example = 'examples.direct_judge_example:main'
+bedrock-example = 'examples.bedrock.bedrock_example:main'
+openai-example = 'examples.openai.openai_example:main'
+gemini-example = 'examples.gemini.gemini_example:main'
+langchain-example = 'examples.langchain.langchain_example:main'
+langgraph-agent-example = 'examples.langgraph_agent.langgraph_agent_example:main'
+langgraph-multi-agent-example = 'examples.langgraph_multi_agent.langgraph_multi_agent_example:main'
+chat-judge-example = 'examples.judge.chat_judge_example:main'
+chat-observability-example = 'examples.chat_observability.chat_observability_example:main'
+direct-judge-example = 'examples.judge.direct_judge_example:main'
 
 [tool.poetry.dependencies]
 python = "^3.10"
