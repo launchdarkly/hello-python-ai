@@ -5,6 +5,7 @@ description = "Hello LaunchDarkly for Python AI"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
+package-mode = false
 
 # Each example is self-contained with its own pyproject.toml.
 # To run an example, cd into its directory under examples/ and run:
