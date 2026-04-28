@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "hello-python-ai-langgraph-multi-agent"
+version = "0.1.0"
+description = "Hello LaunchDarkly for Python AI - LangGraph Multi-Agent"
+authors = ["LaunchDarkly <dev@launchdarkly.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "langgraph_multi_agent_example.py"}]
+
+[tool.poetry.scripts]
+langgraph-multi-agent-example = "langgraph_multi_agent_example:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = ">=1.0.0"
+launchdarkly-server-sdk-ai = "^0.17.0"
+launchdarkly-server-sdk-ai-langchain = "^0.4.0"
+langchain = "^1.0.0"
+langchain-core = "^1.0.0"
+langchain-openai = "^1.0.0"
+langchain-google-genai = "^4.0.0"
+langchain-aws = "^1.0.0"
+langgraph = "^1.0.0"
+typing-extensions = ">=4.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

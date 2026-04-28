@@ -31,4 +31,8 @@ jobs:
         uses: abatilo/actions-poetry@7b6d33e44b4f08d7021a1dee3c044e9c253d6439
 
       - name: Install dependencies
-        run: poetry install --all-extras
+        run: |
+          for dir in examples/*/; do
+            echo "Installing $dir"
+            poetry -C "$dir" install
+          done

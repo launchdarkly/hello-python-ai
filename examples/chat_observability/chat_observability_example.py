@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import asyncio
 import logging
 import ldclient
@@ -6,6 +7,8 @@ from ldclient import Context
 from ldclient.config import Config
 from ldai import LDAIClient, AICompletionConfigDefault
 from ldobserve import ObservabilityConfig, ObservabilityPlugin
+
+load_dotenv()
 
 logging.getLogger('ldclient').setLevel(logging.WARNING)
 

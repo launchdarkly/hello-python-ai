@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import ldclient
 from pprint import pprint
 from ldclient import Context
@@ -8,6 +9,8 @@ from ldai.tracker import TokenUsage
 from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
+
+load_dotenv()
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')

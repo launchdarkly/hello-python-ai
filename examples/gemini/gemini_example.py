@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
@@ -7,6 +8,8 @@ from ldai.tracker import TokenUsage
 from google import genai
 from google.genai import types
 from typing import List, Optional, Tuple
+
+load_dotenv()
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')

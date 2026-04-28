@@ -1,10 +1,13 @@
 import os
+from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai import LDAIClient
 from ldai_openai import get_ai_metrics_from_response
 from openai import OpenAI
+
+load_dotenv()
 
 openai_client = OpenAI()
 

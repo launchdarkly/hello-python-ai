@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "hello-python-ai-judge"
+version = "0.1.0"
+description = "Hello LaunchDarkly for Python AI - Judge"
+authors = ["LaunchDarkly <dev@launchdarkly.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [
+    {include = "chat_judge_example.py"},
+    {include = "direct_judge_example.py"},
+]
+
+[tool.poetry.scripts]
+chat-judge-example = "chat_judge_example:main"
+direct-judge-example = "direct_judge_example:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = ">=1.0.0"
+launchdarkly-server-sdk-ai = "^0.17.0"
+launchdarkly-server-sdk-ai-openai = "^0.3.0"
+launchdarkly-server-sdk-ai-langchain = "^0.4.0"
+openai = ">=1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

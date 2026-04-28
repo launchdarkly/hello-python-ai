@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
@@ -10,6 +11,8 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.graph import StateGraph, END
 from langgraph.types import Command
 from typing_extensions import TypedDict
+
+load_dotenv()
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
