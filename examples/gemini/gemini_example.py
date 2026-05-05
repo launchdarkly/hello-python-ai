@@ -128,11 +128,12 @@ def main():
         context,
         variables={'myUserVariable': "Testing Variable"}
     )
-    tracker = config_value.tracker
 
     if not config_value.enabled:
         print("AI Config is disabled")
         return
+
+    tracker = config_value.create_tracker()
 
     # Configure Google Generative AI
     client = genai.Client(

@@ -82,7 +82,7 @@ async def async_main():
         )
 
         if not chat:
-            print(f"*** AI chat configuration is not enabled for key: {ai_config_key}")
+            print(f"*** Failed to create chat for key: {ai_config_key}")
             return
 
         user_input_1 = "What is feature flagging in 2 sentences?"

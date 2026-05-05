@@ -58,7 +58,7 @@ async def async_main():
         judge = await aiclient.create_judge(judge_key, context)
 
         if not judge:
-            print(f"*** AI judge configuration is not enabled for key: {judge_key}")
+            print(f"*** Failed to create judge for key: {judge_key}")
             return
 
         print("\n*** Starting direct judge evaluation of input and output:")

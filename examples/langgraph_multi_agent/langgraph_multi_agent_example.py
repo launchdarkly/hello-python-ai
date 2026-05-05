@@ -95,7 +95,7 @@ def create_agent_with_config(aiclient, config_key, context):
     # Create a React agent with the LLM
     agent = create_react_agent(llm, [], prompt=agent_config.instructions)
     
-    return agent, agent_config.tracker, False
+    return agent, agent_config.create_tracker(), False
 
 def ai_node(
     state: CodeReviewState, 
