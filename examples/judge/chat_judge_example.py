@@ -56,7 +56,7 @@ async def async_main():
         })
 
         if not chat:
-            print(f"*** AI chat configuration is not enabled for key: {ai_config_key}")
+            print(f"*** Failed to create chat for key: {ai_config_key}")
             return
 
         print("\n*** Starting chat with automatic judge evaluation:")
