@@ -13,7 +13,7 @@ bedrock-example = "bedrock_example:main"
 [tool.poetry.dependencies]
 python = "^3.10"
 python-dotenv = ">=1.0.0"
-launchdarkly-server-sdk-ai = "^0.17.0"
+launchdarkly-server-sdk-ai = "^0.18.0"
 boto3 = ">=0.2.0"
 
 [build-system]
