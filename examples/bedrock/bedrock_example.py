@@ -1,14 +1,39 @@
 import os
+import logging
 from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
 from ldai import LDAIClient
+from ldai.tracker import TokenUsage
+from ldai.providers import LDAIMetrics
 import boto3
 
 load_dotenv()
 
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
+
 client = boto3.client("bedrock-runtime", region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1'))
+
+
+def get_bedrock_metrics(response):
+    """Extract metrics from a Bedrock converse response."""
+    status_code = response.get("ResponseMetadata", {}).get("HTTPStatusCode", 0)
+    success = status_code == 200
+
+    usage = None
+    if response.get("usage"):
+        u = response["usage"]
+        usage = TokenUsage(
+            total=u.get("totalTokens", 0),
+            input=u.get("inputTokens", 0),
+            output=u.get("outputTokens", 0),
+        )
+
+    duration_ms = response.get("metrics", {}).get("latencyMs")
+
+    return LDAIMetrics(success=success, usage=usage, duration_ms=duration_ms)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -69,25 +94,35 @@ def main():
     chat_messages = [{'role': msg.role, 'content': [{'text': msg.content}]} for msg in config_value.messages if msg.role != 'system']
     system_messages = [{'text': msg.content} for msg in config_value.messages if msg.role == 'system']
 
-    # Add the user input to the conversation
-    USER_INPUT = "What can you help me with?"
-    print("User Input:\n", USER_INPUT)
-    chat_messages.append({'role': 'user', 'content': [{'text': USER_INPUT}]})
+    SAMPLE_QUESTION = "What can you help me with?"
+    chat_messages.append({'role': 'user', 'content': [{'text': SAMPLE_QUESTION}]})
 
-    converse = tracker.track_bedrock_converse_metrics(
-        client.converse(
+    print(f'\nSending sample question to {config_value.model.name}: "{SAMPLE_QUESTION}"')
+    print("Waiting for response...")
+
+    converse = tracker.track_metrics_of(
+        get_bedrock_metrics,
+        lambda: client.converse(
             modelId=config_value.model.name,
             messages=chat_messages,
             system=system_messages,
-        )
+        ),
     )
 
-    # Append the AI response to the conversation history
     chat_messages.append(converse["output"]["message"])
-    print("AI Response:\n", converse["output"]["message"]["content"][0]["text"])
 
-    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
-    print("Success.")
+    print(f"\nModel response:\n{converse['output']['message']['content'][0]['text']}")
+
+    summary = tracker.get_summary()
+    print("\nDone! The AI config was evaluated and the following metrics were tracked:")
+    print(f"  Duration:      {summary.duration_ms}ms")
+    print(f"  Success:       {summary.success}")
+    if summary.usage:
+        print(f"  Input tokens:  {summary.usage.input}")
+        print(f"  Output tokens: {summary.usage.output}")
+        print(f"  Total tokens:  {summary.usage.total}")
+    if summary.tool_calls:
+        print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     # Flush pending events and close the client.
     ldclient.get().flush()

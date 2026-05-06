@@ -1,16 +1,19 @@
 import os
+import logging
 from dotenv import load_dotenv
 import ldclient
-from pprint import pprint
 from ldclient import Context
 from ldclient.config import Config
 from ldai import LDAIClient
-from ldai.tracker import TokenUsage
-from ldai_langchain import get_ai_metrics_from_response
+from ldai.providers import LDAIMetrics
+from ldai_langchain import sum_token_usage_from_messages
 from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
 
 load_dotenv()
+
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -26,36 +29,10 @@ def map_provider_to_langchain(provider_name):
     lower_provider = provider_name.lower()
     return provider_mapping.get(lower_provider, lower_provider)
 
-def track_langgraph_metrics(tracker, func):
-    """
-    Track LangGraph agent operations with LaunchDarkly metrics.
-    """
-    try:
-        result = tracker.track_duration_of(func)
-        tracker.track_success()
-
-        total_input_tokens = 0
-        total_output_tokens = 0
-        total_tokens = 0
-        if "messages" in result:
-            for message in result["messages"]:
-                metrics = get_ai_metrics_from_response(message)
-                if metrics.usage:
-                    total_input_tokens += metrics.usage.input
-                    total_output_tokens += metrics.usage.output
-                    total_tokens += metrics.usage.total
-        if total_tokens > 0:
-            tracker.track_tokens(
-                TokenUsage(
-                    input=total_input_tokens,
-                    output=total_output_tokens,
-                    total=total_tokens,
-                )
-            )
-    except Exception:
-        tracker.track_error()
-        raise
-    return result
+def get_langgraph_metrics(response):
+    """Extract aggregated metrics from a LangGraph agent response."""
+    messages = response.get("messages", [])
+    return LDAIMetrics(success=True, usage=sum_token_usage_from_messages(messages))
 
 def get_weather(city: str) -> str:
     """Get the weather for a given city."""
@@ -83,8 +60,7 @@ def main():
         .build()
     )
 
-    print(f"🔍 Using agent config: {agent_config_key}")
-    print()
+    print(f"\nUsing agent config: {agent_config_key}")
 
     # Pass a default for improved resiliency when the agent config is unavailable
     # or LaunchDarkly is unreachable; omit for a disabled default.
@@ -113,17 +89,35 @@ def main():
         prompt=agent_config.instructions
     )
 
+    SAMPLE_QUESTION = "What is the weather in Tokyo?"
+
+    print(f'\nSending sample question to {agent_config.model.name} agent: "{SAMPLE_QUESTION}"')
+    print("Waiting for response...")
+
     try:
-        # Track and execute the agent
-        response = track_langgraph_metrics(agent_config.create_tracker(), lambda: agent.invoke({
-            "messages": [{"role": "user", "content": "What is the weather in Tokyo?"}]
-        }))
-        
-        print("Agent response:")
-        print(response["messages"][-1].content)
-        
+        tracker = agent_config.create_tracker()
+        response = tracker.track_metrics_of(
+            get_langgraph_metrics,
+            lambda: agent.invoke({
+                "messages": [{"role": "user", "content": SAMPLE_QUESTION}]
+            }),
+        )
+
+        print(f"\nAgent response:\n{response['messages'][-1].content}")
+
+        summary = tracker.get_summary()
+        print("\nDone! The agent config was evaluated and the following metrics were tracked:")
+        print(f"  Duration:      {summary.duration_ms}ms")
+        print(f"  Success:       {summary.success}")
+        if summary.usage:
+            print(f"  Input tokens:  {summary.usage.input}")
+            print(f"  Output tokens: {summary.usage.output}")
+            print(f"  Total tokens:  {summary.usage.total}")
+        if summary.tool_calls:
+            print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
+
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"\nError: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
 
     # Flush pending events and close the client.

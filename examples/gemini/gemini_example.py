@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
@@ -10,6 +11,9 @@ from google.genai import types
 from typing import List, Optional, Tuple
 
 load_dotenv()
+
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -143,11 +147,12 @@ def main():
     # Convert LaunchDarkly messages to Google AI format using the helper function
     system_instruction, messages = map_to_google_ai_messages(config_value.messages or [])
 
-    # Add the user input to the conversation
-    USER_INPUT = "What can you help me with?"
-    print("User Input:\n", USER_INPUT)
-    user_message = types.Content(role="user", parts=[types.Part(text=USER_INPUT)])
+    SAMPLE_QUESTION = "What can you help me with?"
+    user_message = types.Content(role="user", parts=[types.Part(text=SAMPLE_QUESTION)])
     messages.append(user_message)
+
+    print(f'\nSending sample question to {config_value.model.name}: "{SAMPLE_QUESTION}"')
+    print("Waiting for response...")
 
     completion = track_genai_metrics(tracker, lambda: client.models.generate_content(
         model=config_value.model.name,
@@ -158,13 +163,21 @@ def main():
     ))
     ai_response = completion.text
 
-    # Add the AI response to the conversation history
     ai_message = types.Content(role="model", parts=[types.Part(text=ai_response)])
     messages.append(ai_message)
-    print("AI Response:\n", ai_response)
 
-    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
-    print("Success.")
+    print(f"\nModel response:\n{ai_response}")
+
+    summary = tracker.get_summary()
+    print("\nDone! The AI config was evaluated and the following metrics were tracked:")
+    print(f"  Duration:      {summary.duration_ms}ms")
+    print(f"  Success:       {summary.success}")
+    if summary.usage:
+        print(f"  Input tokens:  {summary.usage.input}")
+        print(f"  Output tokens: {summary.usage.output}")
+        print(f"  Total tokens:  {summary.usage.total}")
+    if summary.tool_calls:
+        print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     # Flush pending events and close the client.
     ldclient.get().flush()

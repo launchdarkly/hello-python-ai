@@ -1,7 +1,7 @@
 import os
+import logging
 from dotenv import load_dotenv
 import asyncio
-import logging
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
@@ -10,7 +10,9 @@ from ldobserve import ObservabilityConfig, ObservabilityPlugin
 
 load_dotenv()
 
+logging.basicConfig()
 logging.getLogger('ldclient').setLevel(logging.WARNING)
+logging.getLogger('httpx').setLevel(logging.WARNING)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -85,27 +87,29 @@ async def async_main():
             print(f"*** Failed to create chat for key: {ai_config_key}")
             return
 
-        user_input_1 = "What is feature flagging in 2 sentences?"
-        print("User Input:", user_input_1)
-        
-        response_1 = await chat.invoke(user_input_1)
-        print("Chat Response:", response_1.message.content)
+        sample_question_1 = "What is feature flagging in 2 sentences?"
+        print(f'\nSending sample question: "{sample_question_1}"')
+        print("Waiting for response...")
 
-        user_input_2 = "Give me a specific use case example."
-        print("\nUser Input:", user_input_2)
+        response_1 = await chat.run(sample_question_1)
+        print(f"\nModel response:\n{response_1.content}")
 
-        response_2 = await chat.invoke(user_input_2)
-        print("Chat Response:", response_2.message.content)
+        sample_question_2 = "Give me a specific use case example."
+        print(f'\nSending follow-up question: "{sample_question_2}"')
+        print("Waiting for response...")
 
-        # Judge evaluations run asynchronously. Await them (e.g. with asyncio.gather) so they
+        response_2 = await chat.run(sample_question_2)
+        print(f"\nModel response:\n{response_2.content}")
+
+        # Judge evaluations run asynchronously. Await them so they
         # complete before the process or request ends—even if you don't need to log or use
         # the results.
-        if response_1.evaluations:
-            await asyncio.gather(*response_1.evaluations)
-        if response_2.evaluations:
-            await asyncio.gather(*response_2.evaluations)
+        if response_1.evaluations is not None:
+            await response_1.evaluations
+        if response_2.evaluations is not None:
+            await response_2.evaluations
 
-        print("\nSuccess.")
+        print("\nDone! The AI config was evaluated with observability enabled.")
 
     except Exception as err:
         print("Error:", err)

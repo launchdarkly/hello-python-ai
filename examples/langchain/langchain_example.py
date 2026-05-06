@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 import asyncio
 import ldclient
@@ -9,6 +10,9 @@ from ldai_langchain import get_ai_metrics_from_response
 from langchain.chat_models import init_chat_model
 
 load_dotenv()
+
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -74,35 +78,40 @@ async def async_main():
     tracker = config_value.create_tracker()
 
     try:
-        # Create LangChain model instance using init_chat_model
-        # Map the provider from config_value to LangChain format
-        print("Model:", config_value.model.name, "Provider:", config_value.provider.name)
         langchain_provider = map_provider_to_langchain(config_value.provider.name)
         llm = init_chat_model(
             model=config_value.model.name,
             model_provider=langchain_provider,
         )
-        
+
         messages = [message.to_dict() for message in (config_value.messages or [])]
 
-        # Add the user input to the conversation
-        USER_INPUT = "What can you help me with?"
-        print("User Input:\n", USER_INPUT)
-        messages.append({'role': 'user', 'content': USER_INPUT})
+        SAMPLE_QUESTION = "What can you help me with?"
+        messages.append({'role': 'user', 'content': SAMPLE_QUESTION})
 
-        # Track the LangChain completion with LaunchDarkly metrics using the LD LangChain provider's extractor
-        completion = await tracker.track_metrics_of(
-            lambda: llm.ainvoke(messages),
+        print(f'\nSending sample question to {config_value.model.name} via LangChain ({langchain_provider}): "{SAMPLE_QUESTION}"')
+        print("Waiting for response...")
+
+        completion = await tracker.track_metrics_of_async(
             get_ai_metrics_from_response,
+            lambda: llm.ainvoke(messages),
         )
         ai_response = completion.content
 
-        # Add the AI response to the conversation history.
         messages.append({'role': 'assistant', 'content': ai_response})
-        print("AI Response:\n", ai_response)
 
-        # Continue the conversation by adding user input to the messages list and invoking the LLM again.
-        print("Success.")
+        print(f"\nModel response:\n{ai_response}")
+
+        summary = tracker.get_summary()
+        print("\nDone! The AI config was evaluated and the following metrics were tracked:")
+        print(f"  Duration:      {summary.duration_ms}ms")
+        print(f"  Success:       {summary.success}")
+        if summary.usage:
+            print(f"  Input tokens:  {summary.usage.input}")
+            print(f"  Output tokens: {summary.usage.output}")
+            print(f"  Total tokens:  {summary.usage.total}")
+        if summary.tool_calls:
+            print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     except Exception as e:
         print(f"Error during completion: {e}")

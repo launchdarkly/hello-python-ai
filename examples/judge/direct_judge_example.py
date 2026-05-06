@@ -1,6 +1,6 @@
 import os
+import logging
 from dotenv import load_dotenv
-import json
 import asyncio
 import ldclient
 from ldclient import Context
@@ -9,11 +9,14 @@ from ldai import LDAIClient, AIJudgeConfigDefault
 
 load_dotenv()
 
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
+
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set judge_key to the Judge key you want to use.
-judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge-accuracy')
+judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge')
 
 
 async def async_main():
@@ -54,38 +57,38 @@ async def async_main():
         #           {'role': 'user', 'content': 'RESPONSE TO EVALUATE: {{response_to_evaluate}}'},
         #       ],
         #   )
-        #   judge = await aiclient.create_judge(judge_key, context, default)
-        judge = await aiclient.create_judge(judge_key, context)
+        #   judge = aiclient.create_judge(judge_key, context, default)
+        judge = aiclient.create_judge(judge_key, context)
 
         if not judge:
             print(f"*** Failed to create judge for key: {judge_key}")
             return
 
-        print("\n*** Starting direct judge evaluation of input and output:")
         input_text = 'You are a helpful assistant for the company LaunchDarkly. How can you help me?'
         output_text = 'I can answer any question you have except for questions about the company LaunchDarkly.'
 
-        print("Input:", input_text)
-        print("Output:", output_text)
+        print(f'\nEvaluating a sample input/output pair with the judge:')
+        print(f'  Sample input:  "{input_text}"')
+        print(f'  Sample output: "{output_text}"')
+        print("Waiting for judge evaluation...")
 
-        judge_response = await judge.evaluate(input_text, output_text)
-
-        if judge_response is None:
-            print("\nJudge evaluation was skipped.")
-            print("This typically happens when the sample rate doesn't require this evaluation, or due to a configuration issue.")
-            print("Check application logs for more details.")
-            return
+        judge_result = await judge.evaluate(input_text, output_text)
 
         # Track the judge evaluation scores on the tracker for the aiConfig you are evaluating
         # Example:
-        # aiConfig.tracker.track_eval_scores(judge_response.evals)
+        # aiConfig.create_tracker().track_judge_result(judge_result)
 
-        # Convert JudgeResponse to dict for display using to_dict()
-        judge_response_dict = judge_response.to_dict()
-        print("Judge Response:")
-        print(json.dumps(judge_response_dict, indent=2, default=str))
+        print("\nJudge result:")
+        print(f"- judge_config_key: {judge_key}")
+        print(f"  sampled: {judge_result.sampled}")
+        if judge_result.sampled:
+            print(f"  success: {judge_result.success}")
+            print(f"  error_message: {judge_result.error_message}")
+            print(f"  metric_key: {judge_result.metric_key}")
+            print(f"  score: {judge_result.score}")
+            print(f"  reasoning: {judge_result.reasoning}")
 
-        print("Success.")
+        print("\nDone!")
     except Exception as err:
         print("Error:", err)
     finally:

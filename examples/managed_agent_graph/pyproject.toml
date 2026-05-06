@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "hello-python-ai-managed-agent-graph"
+version = "0.1.0"
+description = "Hello LaunchDarkly for Python AI - Managed Agent Graph"
+authors = ["LaunchDarkly <dev@launchdarkly.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "managed_agent_graph_example.py"}]
+
+[tool.poetry.scripts]
+managed-agent-graph-example = "managed_agent_graph_example:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = ">=1.0.0"
+launchdarkly-server-sdk-ai = ">=0.19.0"
+launchdarkly-server-sdk-ai-openai = {version = ">=0.5.0", extras = ["agents"]}
+launchdarkly-server-sdk-ai-langchain = {version = ">=0.6.0", extras = ["graph"]}
+openai = ">=1.0.0"
+langchain-openai = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
