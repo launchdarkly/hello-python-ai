@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "langchain_example.py"}]
 
 [tool.poetry.scripts]
-langchain-example = "langchain_example:main"
+langchain = "langchain_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

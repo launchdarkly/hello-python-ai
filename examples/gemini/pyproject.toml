@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "gemini_example.py"}]
 
 [tool.poetry.scripts]
-gemini-example = "gemini_example:main"
+gemini = "gemini_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

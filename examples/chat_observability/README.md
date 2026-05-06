@@ -46,5 +46,5 @@ View your data in the LaunchDarkly dashboard under **Observability** tabs.
 ## Run
 
 ```bash
-poetry run chat-observability-example
+poetry run chat
 ```

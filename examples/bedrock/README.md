@@ -43,5 +43,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with the AWS Bedro
 ## Run
 
 ```bash
-poetry run bedrock-example
+poetry run bedrock
 ```

@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's managed agent functionality,
 ## Run
 
 ```bash
-poetry run managed-agent-example
+poetry run agent
 ```

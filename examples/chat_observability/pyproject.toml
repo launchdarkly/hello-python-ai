@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "chat_observability_example.py"}]
 
 [tool.poetry.scripts]
-chat-observability-example = "chat_observability_example:main"
+chat = "chat_observability_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

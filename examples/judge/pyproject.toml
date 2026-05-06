@@ -11,8 +11,8 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-chat-judge-example = "chat_judge_example:main"
-direct-judge-example = "direct_judge_example:main"
+chat-judge = "chat_judge_example:main"
+direct-judge = "direct_judge_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

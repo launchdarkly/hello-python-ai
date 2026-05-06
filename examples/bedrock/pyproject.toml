@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "bedrock_example.py"}]
 
 [tool.poetry.scripts]
-bedrock-example = "bedrock_example:main"
+bedrock = "bedrock_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

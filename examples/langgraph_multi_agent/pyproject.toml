@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "langgraph_multi_agent_example.py"}]
 
 [tool.poetry.scripts]
-langgraph-multi-agent-example = "langgraph_multi_agent_example:main"
+agent-graph = "langgraph_multi_agent_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

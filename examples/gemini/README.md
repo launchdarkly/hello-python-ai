@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with the Google Ge
 ## Run
 
 ```bash
-poetry run gemini-example
+poetry run gemini
 ```

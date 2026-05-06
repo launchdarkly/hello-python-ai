@@ -40,5 +40,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangChain, su
 ## Run
 
 ```bash
-poetry run langchain-example
+poetry run langchain
 ```

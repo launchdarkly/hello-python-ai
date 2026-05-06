@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with the OpenAI pr
 ## Run
 
 ```bash
-poetry run openai-example
+poetry run openai
 ```

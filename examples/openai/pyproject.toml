@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "openai_example.py"}]
 
 [tool.poetry.scripts]
-openai-example = "openai_example:main"
+openai = "openai_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

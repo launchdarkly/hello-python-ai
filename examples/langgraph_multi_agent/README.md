@@ -42,5 +42,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
 ## Run
 
 ```bash
-poetry run langgraph-multi-agent-example
+poetry run agent-graph
 ```

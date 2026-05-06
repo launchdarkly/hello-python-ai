@@ -33,5 +33,5 @@ This example demonstrates how to use LaunchDarkly's managed agent graph function
 ## Run
 
 ```bash
-poetry run managed-agent-graph-example
+poetry run agent-graph
 ```

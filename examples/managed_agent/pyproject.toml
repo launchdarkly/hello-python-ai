@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "managed_agent_example.py"}]
 
 [tool.poetry.scripts]
-managed-agent-example = "managed_agent_example:main"
+agent = "managed_agent_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

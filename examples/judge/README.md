@@ -43,7 +43,7 @@ These examples demonstrate how to use LaunchDarkly's judge functionality to eval
 Uses the chat functionality which automatically evaluates responses with any judges defined in the AI config.
 
 ```bash
-poetry run chat-judge-example
+poetry run chat-judge
 ```
 
 ### Direct judge evaluation
@@ -51,5 +51,5 @@ poetry run chat-judge-example
 Evaluates specific input/output pairs using a judge configuration directly.
 
 ```bash
-poetry run direct-judge-example
+poetry run direct-judge
 ```
