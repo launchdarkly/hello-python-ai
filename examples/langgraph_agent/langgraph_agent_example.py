@@ -19,7 +19,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config key for the agent
-agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-ai-agent-config')
+agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-agent-config')
 
 def map_provider_to_langchain(provider_name):
     """Map LaunchDarkly provider names to LangChain provider names."""

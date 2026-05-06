@@ -19,7 +19,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config_key to the AI Config key you want to evaluate.
-ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
+ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-completion-config')
 
 # Set Google API key
 google_api_key = os.getenv('GOOGLE_API_KEY')

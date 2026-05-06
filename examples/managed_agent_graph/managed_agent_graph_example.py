@@ -16,7 +16,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set graph_key to the Agent Graph key you want to evaluate.
-graph_key = os.getenv('LAUNCHDARKLY_AGENT_GRAPH_KEY', 'travel-agent-flow')
+graph_key = os.getenv('LAUNCHDARKLY_AGENT_GRAPH_KEY', 'sample-agent-graph')
 
 
 def search_flights(destination: str, date: str) -> str:
