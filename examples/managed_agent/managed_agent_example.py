@@ -5,7 +5,7 @@ import asyncio
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from ldai import LDAIClient, AICompletionConfigDefault
+from ldai import LDAIClient, AIAgentConfigDefault
 
 load_dotenv()
 
@@ -15,8 +15,13 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
-# Set config_key to the AI Config key you want to evaluate.
-ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-ai-config')
+# Set agent_config_key to the AI Agent Config key you want to evaluate.
+agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-agent-config')
+
+
+def get_weather(city: str) -> str:
+    """Get the weather for a given city."""
+    return f"The weather in {city} is sunny."
 
 
 async def async_main():
@@ -44,38 +49,48 @@ async def async_main():
     )
 
     try:
-        # Pass a default for improved resiliency when the AI config is unavailable
+        # Pass a default for improved resiliency when the agent config is unavailable
         # or LaunchDarkly is unreachable; omit for a disabled default.
         # Example:
-        #   default = AICompletionConfigDefault(
+        #   default = AIAgentConfigDefault(
         #       enabled=True,
         #       model={'name': 'gpt-4'},
         #       provider={'name': 'openai'},
-        #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
+        #       instructions='You are a helpful weather assistant.',
         #   )
-        #   chat = await aiclient.create_model(ai_config_key, context, default, {'companyName': 'LaunchDarkly'})
-        chat = await aiclient.create_model(ai_config_key, context, variables={
-            'companyName': 'LaunchDarkly',
-        })
+        #   agent = await aiclient.create_agent(agent_config_key, context, tools={'get_weather': get_weather}, default=default)
+        agent = await aiclient.create_agent(
+            agent_config_key,
+            context,
+            tools={'get_weather': get_weather},
+        )
 
-        if not chat:
-            print(f"*** Failed to create chat for key: {ai_config_key}")
+        if not agent:
+            print(f"*** Failed to create agent for key: {agent_config_key}")
             return
 
-        sample_question = 'How can LaunchDarkly help me?'
+        sample_question = 'What is the weather in Tokyo?'
         print(f'\nSending sample question: "{sample_question}"')
         print("Waiting for response...")
 
-        chat_response = await chat.run(sample_question)
-        print(f"\nModel response:\n{chat_response.content}")
+        agent_response = await agent.run(sample_question)
+        print(f"\nAgent response:\n{agent_response.content}")
 
-        # Judge evaluations run asynchronously. Await them so they complete before the
-        # process or request ends—even if you don't need to log or use the results.
+        summary = agent_response.metrics
+        print("\nMetrics tracked:")
+        print(f"  Duration:      {summary.duration_ms}ms")
+        print(f"  Success:       {summary.success}")
+        if summary.usage:
+            print(f"  Input tokens:  {summary.usage.input}")
+            print(f"  Output tokens: {summary.usage.output}")
+            print(f"  Total tokens:  {summary.usage.total}")
+        if summary.tool_calls:
+            print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
-        if chat_response.evaluations is not None:
-            eval_results = await chat_response.evaluations
+        if agent_response.evaluations is not None:
+            eval_results = await agent_response.evaluations
 
-            print("Judge results:")
+            print("\nJudge results:")
             for result in eval_results:
                 print(f"- judge_config_key: {result.judge_config_key}")
                 print(f"  sampled: {result.sampled}")
@@ -86,9 +101,8 @@ async def async_main():
                 print(f"  metric_key: {result.metric_key}")
                 print(f"  score: {result.score}")
                 print(f"  reasoning: {result.reasoning}")
-
         else:
-            print("\nNo judge evaluations were performed. Try adding a judge to the AI config to see results.")
+            print("\nNo judge evaluations were performed.")
 
     except Exception as err:
         print("Error:", err)

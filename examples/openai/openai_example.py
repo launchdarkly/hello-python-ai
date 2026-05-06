@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 import ldclient
 from ldclient import Context
@@ -8,6 +9,9 @@ from ldai_openai import get_ai_metrics_from_response
 from openai import OpenAI
 
 load_dotenv()
+
+logging.basicConfig()
+logging.getLogger('ldclient').setLevel(logging.WARNING)
 
 openai_client = OpenAI()
 
@@ -69,12 +73,12 @@ def main():
 
     messages = [message.to_dict() for message in (config_value.messages or [])]
 
-    # Add the user input to the conversation
-    USER_INPUT = "What can you help me with?"
-    print("User Input:\n", USER_INPUT)
-    messages.append({'role': 'user', 'content': USER_INPUT})
+    SAMPLE_QUESTION = "What can you help me with?"
+    messages.append({'role': 'user', 'content': SAMPLE_QUESTION})
 
-    # Track the OpenAI completion with LaunchDarkly metrics using the LD OpenAI provider's extractor
+    print(f'\nSending sample question to {config_value.model.name}: "{SAMPLE_QUESTION}"')
+    print("Waiting for response...")
+
     completion = tracker.track_metrics_of(
         get_ai_metrics_from_response,
         lambda:
@@ -85,12 +89,19 @@ def main():
     )
     ai_response = completion.choices[0].message.content
 
-    # Add the AI response to the conversation history.
     messages.append({'role': 'assistant', 'content': ai_response})
-    print("AI Response:\n", ai_response)
 
-    # Continue the conversation by adding user input to the messages list and invoking the LLM again.
-    print("Success.")
+    print(f"\nModel response:\n{ai_response}")
+    summary = tracker.get_summary()
+    print("\nDone! The AI config was evaluated and the following metrics were tracked:")
+    print(f"  Duration:      {summary.duration_ms}ms")
+    print(f"  Success:       {summary.success}")
+    if summary.usage:
+        print(f"  Input tokens:  {summary.usage.input}")
+        print(f"  Output tokens: {summary.usage.output}")
+        print(f"  Total tokens:  {summary.usage.total}")
+    if summary.tool_calls:
+        print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     # Flush pending events and close the client.
     ldclient.get().flush()

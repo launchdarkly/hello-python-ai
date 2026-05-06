@@ -1,26 +1,23 @@
 [tool.poetry]
-name = "hello-python-ai-langgraph-agent"
+name = "hello-python-ai-managed-agent"
 version = "0.1.0"
-description = "Hello LaunchDarkly for Python AI - LangGraph Agent"
+description = "Hello LaunchDarkly for Python AI - Managed Agent"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [{include = "langgraph_agent_example.py"}]
+packages = [{include = "managed_agent_example.py"}]
 
 [tool.poetry.scripts]
-langgraph-agent-example = "langgraph_agent_example:main"
+managed-agent-example = "managed_agent_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 python-dotenv = ">=1.0.0"
 launchdarkly-server-sdk-ai = ">=0.19.0"
+launchdarkly-server-sdk-ai-openai = {version = ">=0.5.0", extras = ["agents"]}
 launchdarkly-server-sdk-ai-langchain = ">=0.6.0"
-langchain = "^1.0.0"
-langchain-core = "^1.0.0"
+openai = ">=1.0.0"
 langchain-openai = "^1.0.0"
-langchain-google-genai = "^4.0.0"
-langchain-aws = "^1.0.0"
-langgraph = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
