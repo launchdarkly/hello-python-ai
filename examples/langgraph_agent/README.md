@@ -6,19 +6,21 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
 
 - Python 3.10 or higher
 - [Poetry](https://python-poetry.org/) installed
-- A LaunchDarkly account with an [AI Config (Agent-based)](https://launchdarkly.com/docs/home/ai-configs/agents) created
+- A [LaunchDarkly](https://launchdarkly.com/) account and SDK key
 - API keys for the providers you want to use
 
 ## Setup
+
+1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
+
+   - [Create an AI Agent Config](https://launchdarkly.com/docs/home/ai-configs/agents) with a model and agent instructions. Default key: `sample-agent-config`.
 
 1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AGENT_CONFIG_KEY=sample-ai-agent-config
+   LAUNCHDARKLY_AGENT_CONFIG_KEY=sample-agent-config
    ```
-
-   > `LAUNCHDARKLY_AGENT_CONFIG_KEY` defaults to `sample-ai-agent-config` if not set.
 
    Add the API keys for the providers you want to use:
 
@@ -29,7 +31,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
    AWS_SECRET_ACCESS_KEY=your-secret-access-key
    ```
 
-2. Install the required dependencies:
+1. Install the required dependencies:
 
    ```bash
    poetry install
@@ -38,5 +40,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
 ## Run
 
 ```bash
-poetry run langgraph-agent-example
+poetry run agent
 ```

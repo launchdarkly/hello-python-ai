@@ -6,10 +6,15 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
 
 - Python 3.10 or higher
 - [Poetry](https://python-poetry.org/) installed
-- A LaunchDarkly account with [AI Configs (Agent-based)](https://launchdarkly.com/docs/home/ai-configs/agents) created using the keys below. Write a goal for each config and enable it with targeting rules.
+- A [LaunchDarkly](https://launchdarkly.com/) account and SDK key
 - API keys for the providers you want to use
 
 ## Setup
+
+1. Create the following configs in your LaunchDarkly project. You can use different keys by setting the environment variables in your `.env`.
+
+   - [Create an AI Agent Config](https://launchdarkly.com/docs/home/ai-configs/agents) for code analysis. Default key: `code-review-analyzer`.
+   - [Create an AI Agent Config](https://launchdarkly.com/docs/home/ai-configs/agents) for documentation generation. Default key: `code-review-documentation`.
 
 1. Create a `.env` file in this directory with the following variables:
 
@@ -18,9 +23,6 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
    LAUNCHDARKLY_ANALYZER_CONFIG_KEY=code-review-analyzer
    LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY=code-review-documentation
    ```
-
-   > `LAUNCHDARKLY_ANALYZER_CONFIG_KEY` defaults to `code-review-analyzer` if not set.
-   > `LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY` defaults to `code-review-documentation` if not set.
 
    Add the API keys for the providers you want to use:
 
@@ -31,7 +33,7 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
    AWS_SECRET_ACCESS_KEY=your-secret-access-key
    ```
 
-2. Install the required dependencies:
+1. Install the required dependencies:
 
    ```bash
    poetry install
@@ -40,5 +42,5 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangGraph to 
 ## Run
 
 ```bash
-poetry run langgraph-multi-agent-example
+poetry run agent-graph
 ```
