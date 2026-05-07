@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          for dir in examples/*/; do
+          for dir in getting_started/completion_config/*/ getting_started/agent_config/*/ features/*/; do
             echo "Installing $dir"
             poetry -C "$dir" install
           done

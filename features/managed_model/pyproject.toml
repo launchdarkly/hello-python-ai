@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "hello-python-ai-managed-model"
+version = "0.1.0"
+description = "Hello LaunchDarkly for Python AI - Managed Model"
+authors = ["LaunchDarkly <dev@launchdarkly.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "managed_model_example.py"}]
+
+[tool.poetry.scripts]
+managed-model = "managed_model_example:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = ">=1.0.0"
+launchdarkly-server-sdk-ai = ">=0.19.0"
+launchdarkly-observability = ">=0.1.0"
+launchdarkly-server-sdk-ai-openai = ">=0.5.0"
+launchdarkly-server-sdk-ai-langchain = ">=0.6.0"
+openai = ">=1.0.0"
+langchain-openai = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
