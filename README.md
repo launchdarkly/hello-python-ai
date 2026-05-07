@@ -1,38 +1,36 @@
-# LaunchDarkly sample Python application
+# LaunchDarkly AI SDK for Python - Examples
 
-We've built a simple console application that demonstrates how LaunchDarkly's SDK works.
-
-Below, you'll find the build procedure. For more comprehensive instructions, you can visit your [Quickstart page](https://docs.launchdarkly.com/home/ai-configs/quickstart) or the [Python reference guide](https://docs.launchdarkly.com/sdk/ai/python).
-
-This demo requires Python 3.10 or higher.
-
-## Build Instructions
-
-This repository includes examples for `OpenAI`, `Bedrock`, `Gemini`, `LangChain`, `LangGraph`, `Judge`, and `Observability`. Depending on your preferred provider, you may have to take some additional steps.
-
-### General setup
-
-1. [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) using the key specified in each example, or copy the key of existing AI Config in your LaunchDarkly project that you want to evaluate.
-
-1. Ensure you have [Poetry](https://python-poetry.org/) installed.
-
-1. Create a `.env` file in the repository root with at least your LaunchDarkly SDK key:
-
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   ```
-
-   Each example README describes the full set of environment variables needed. The `.env` file is loaded automatically when running any example.
-
-### Examples
-
-| Example | Description | README |
+| Package | PyPI | Docs |
 | --- | --- | --- |
-| **OpenAI** | Single provider using OpenAI | [examples/openai](examples/openai/README.md) |
-| **Bedrock** | Single provider using AWS Bedrock | [examples/bedrock](examples/bedrock/README.md) |
-| **Gemini** | Single provider using Google Gemini | [examples/gemini](examples/gemini/README.md) |
-| **LangChain** | Multiple providers via LangChain | [examples/langchain](examples/langchain/README.md) |
-| **LangGraph Agent** | Single agent using LangGraph | [examples/langgraph_agent](examples/langgraph_agent/README.md) |
-| **LangGraph Multi-Agent** | Multiple agents using LangGraph | [examples/langgraph_multi_agent](examples/langgraph_multi_agent/README.md) |
-| **Judge** | Judge evaluation of AI responses | [examples/judge](examples/judge/README.md) |
-| **Chat with Observability** | Observability plugin for AI chat monitoring | [examples/chat_observability](examples/chat_observability/README.md) |
+| [launchdarkly-server-sdk-ai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/sdk/server-ai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai)](https://pypi.org/project/launchdarkly-server-sdk-ai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
+| [launchdarkly-server-sdk-ai-openai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-openai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-openai)](https://pypi.org/project/launchdarkly-server-sdk-ai-openai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
+| [launchdarkly-server-sdk-ai-langchain](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-langchain) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-langchain)](https://pypi.org/project/launchdarkly-server-sdk-ai-langchain/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
+| [launchdarkly-observability](https://github.com/launchdarkly/observability-sdk/tree/main/sdk/%40launchdarkly/observability-python) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-observability)](https://pypi.org/project/launchdarkly-observability/) | [Reference](https://docs.launchdarkly.com/sdk/observability/python) |
+
+Each example is a self-contained application you can run independently to explore LaunchDarkly's AI APIs hands-on. Pick one that matches your provider or use case, follow the README, and you'll be up and running in minutes.
+
+For more comprehensive instructions, visit the [Quickstart page](https://docs.launchdarkly.com/home/ai-configs/quickstart) or the [Python reference guide](https://docs.launchdarkly.com/sdk/ai/python).
+
+## Getting Started
+
+These examples show how to integrate LaunchDarkly AI with different providers using `completion_config` and `agent_config`.
+
+| Example | Description |
+| --- | --- |
+| [Bedrock](getting_started/completion_config/bedrock/) | `completion_config` with AWS Bedrock, metrics tracking |
+| [Gemini](getting_started/completion_config/gemini/) | `completion_config` with Google Gemini, metrics tracking |
+| [LangChain](getting_started/completion_config/langchain/) | `completion_config` with LangChain, async metrics tracking |
+| [LangGraph Agent](getting_started/agent_config/langgraph_agent/) | `agent_config` with a single LangGraph ReAct agent, tool calling, metrics tracking |
+| [LangGraph Multi-Agent](getting_started/agent_config/langgraph_multi_agent/) | `agent_config` with multiple LangGraph agents, custom StateGraph workflow, per-node metrics |
+| [OpenAI](getting_started/completion_config/openai/) | `completion_config` with OpenAI, automatic metrics tracking |
+
+## Features
+
+These examples demonstrate LaunchDarkly's managed APIs and standalone capabilities.
+
+| Example | Description |
+| --- | --- |
+| [Judge](features/judge/) | `create_judge` for standalone evaluation of AI responses |
+| [Managed Agent](features/managed_agent/) | `create_agent` with tool calling, automatic metrics tracking, and judge evaluation |
+| [Managed Agent Graph](features/managed_agent_graph/) | `create_agent_graph` with multi-node workflows, tool calling, per-node metrics, and judge evaluation |
+| [Managed Model](features/managed_model/) | `create_model` with managed chat, automatic metrics tracking, and judge evaluation |
