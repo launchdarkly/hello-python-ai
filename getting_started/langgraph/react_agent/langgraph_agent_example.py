@@ -78,7 +78,7 @@ def main():
     agent_config = aiclient.agent_config(agent_config_key, context)
 
     if not agent_config.enabled:
-        print("AI Agent Config is disabled")
+        print(f"AI config '{agent_config_key}' is disabled. Verify the config key exists in your LaunchDarkly project and is not targeting a disabled variation.")
         return
     
     langchain_provider = map_provider_to_langchain(agent_config.provider.name)

@@ -123,7 +123,7 @@ def ai_node(
                 goto=END,
                 update={
                     "messages": state["messages"],
-                    state_key: f"AI Config {config_key} is disabled. Node for {config_key} skipped."
+                    state_key: f"AI config '{config_key}' is disabled. Verify the config key exists in your LaunchDarkly project and is not targeting a disabled variation."
                 }
             )
         

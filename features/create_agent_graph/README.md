@@ -1,6 +1,6 @@
-# Managed Agent Graph Example
+# Create Agent Graph Example
 
-This example demonstrates how to use LaunchDarkly's managed agent graph functionality, which orchestrates multi-node agent workflows with automatic metric tracking at both the graph and per-node level.
+This example demonstrates how to use LaunchDarkly's `create_agent_graph` method, which orchestrates multi-node agent workflows with automatic metric tracking at both the graph and per-node level.
 
 ## Prerequisites
 

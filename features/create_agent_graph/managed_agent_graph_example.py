@@ -74,7 +74,7 @@ async def async_main():
         )
 
         if not graph:
-            print(f"*** Failed to create agent graph for key: {graph_key}")
+            print(f"AI config '{graph_key}' is disabled. Verify the config key exists in your LaunchDarkly project and is not targeting a disabled variation.")
             return
 
         sample_question = 'Plan a trip to Tokyo next week. Find flights, hotels, and check the weather.'

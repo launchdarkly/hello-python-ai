@@ -1,6 +1,6 @@
-# Managed Agent Example
+# Create Agent Example
 
-This example demonstrates how to use LaunchDarkly's managed agent functionality, which handles model creation, metric tracking, and judge evaluation dispatch automatically.
+This example demonstrates how to use LaunchDarkly's `create_agent` method, which handles model creation, metric tracking, and judge evaluation dispatch automatically.
 
 ## Prerequisites
 

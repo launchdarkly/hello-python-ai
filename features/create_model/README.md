@@ -1,6 +1,6 @@
-# Judge Example (Direct Evaluation)
+# Create Model Example
 
-This example demonstrates how to use LaunchDarkly's judge functionality to evaluate specific input/output pairs directly, without an associated chat session.
+This example demonstrates how to use LaunchDarkly's `create_model` method, which handles model creation, chat execution, and optional judge evaluation dispatch automatically.
 
 ## Prerequisites
 
@@ -13,13 +13,13 @@ This example demonstrates how to use LaunchDarkly's judge functionality to evalu
 
 1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
 
-   - [Create a Judge Config](https://launchdarkly.com/docs/home/ai-configs/judges) for evaluation. Default key: `sample-ai-judge`.
+   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a model and system message. Default key: `sample-completion-config`.
 
 1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AI_JUDGE_KEY=sample-ai-judge
+   LAUNCHDARKLY_AI_CONFIG_KEY=sample-completion-config
    OPENAI_API_KEY=your-openai-api-key
    ```
 
@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's judge functionality to evalu
 ## Run
 
 ```bash
-poetry run judge
+poetry run managed-model
 ```
