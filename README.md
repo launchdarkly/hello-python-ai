@@ -13,16 +13,16 @@ For more comprehensive instructions, visit the [Quickstart page](https://docs.la
 
 ## Getting Started
 
-These examples show how to integrate LaunchDarkly AI with different providers using `completion_config` and `agent_config`.
+These examples show how to integrate LaunchDarkly AI with different providers.
 
-| Example | Description |
-| --- | --- |
-| [Bedrock](getting_started/completion_config/bedrock/) | `completion_config` with AWS Bedrock, metrics tracking |
-| [Gemini](getting_started/completion_config/gemini/) | `completion_config` with Google Gemini, metrics tracking |
-| [LangChain](getting_started/completion_config/langchain/) | `completion_config` with LangChain, async metrics tracking |
-| [LangGraph Agent](getting_started/agent_config/langgraph_agent/) | `agent_config` with a single LangGraph ReAct agent, tool calling, metrics tracking |
-| [LangGraph Multi-Agent](getting_started/agent_config/langgraph_multi_agent/) | `agent_config` with multiple LangGraph agents, custom StateGraph workflow, per-node metrics |
-| [OpenAI](getting_started/completion_config/openai/) | `completion_config` with OpenAI, automatic metrics tracking |
+| Provider | Example | Description |
+| --- | --- | --- |
+| Bedrock | [Converse](getting_started/bedrock/converse/) | `completion_config` with AWS Bedrock Converse API, metrics tracking |
+| Gemini | [Generate Content](getting_started/gemini/generate_content/) | `completion_config` with Google GenAI, metrics tracking |
+| LangChain | [Invoke](getting_started/langchain/invoke/) | `completion_config` with LangChain, async metrics tracking |
+| LangGraph | [ReAct Agent](getting_started/langgraph/react_agent/) | `agent_config` with a single LangGraph ReAct agent, tool calling, metrics tracking |
+| LangGraph | [StateGraph](getting_started/langgraph/state_graph/) | `agent_config` with multiple LangGraph agents, custom StateGraph workflow, per-node metrics |
+| OpenAI | [Chat Completions](getting_started/openai/chat_completions/) | `completion_config` with OpenAI, automatic metrics tracking |
 
 ## Features
 
@@ -30,7 +30,7 @@ These examples demonstrate LaunchDarkly's managed APIs and standalone capabiliti
 
 | Example | Description |
 | --- | --- |
-| [Judge](features/judge/) | `create_judge` for standalone evaluation of AI responses |
-| [Managed Agent](features/managed_agent/) | `create_agent` with tool calling, automatic metrics tracking, and judge evaluation |
-| [Managed Agent Graph](features/managed_agent_graph/) | `create_agent_graph` with multi-node workflows, tool calling, per-node metrics, and judge evaluation |
-| [Managed Model](features/managed_model/) | `create_model` with managed chat, automatic metrics tracking, and judge evaluation |
+| [create_judge](features/create_judge/) | Standalone evaluation of AI responses |
+| [create_agent](features/create_agent/) | Tool calling, automatic metrics tracking, and judge evaluation |
+| [create_agent_graph](features/create_agent_graph/) | Multi-node workflows, tool calling, per-node metrics, and judge evaluation |
+| [create_model](features/create_model/) | Managed chat, automatic metrics tracking, and judge evaluation |

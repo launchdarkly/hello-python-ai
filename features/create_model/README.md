@@ -1,6 +1,6 @@
-# Managed Model Example
+# Create Model Example
 
-This example demonstrates how to use LaunchDarkly's managed model functionality (`create_model`), which handles model creation, chat execution, and optional judge evaluation dispatch automatically.
+This example demonstrates how to use LaunchDarkly's `create_model` method, which handles model creation, chat execution, and optional judge evaluation dispatch automatically.
 
 ## Prerequisites
 
@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's managed model functionality 
 ## Run
 
 ```bash
-poetry run managed-model
+poetry run model
 ```

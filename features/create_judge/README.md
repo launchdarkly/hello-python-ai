@@ -1,6 +1,6 @@
-# Judge Example (Direct Evaluation)
+# Create Judge Example
 
-This example demonstrates how to use LaunchDarkly's judge functionality to evaluate specific input/output pairs directly, without an associated chat session.
+This example demonstrates how to use LaunchDarkly's `create_judge` method to evaluate specific input/output pairs directly, without an associated chat session.
 
 ## Prerequisites
 

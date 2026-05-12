@@ -66,7 +66,7 @@ async def async_main():
         judge = aiclient.create_judge(judge_key, context)
 
         if not judge:
-            print(f"*** Failed to create judge for key: {judge_key}")
+            print(f"AI config '{judge_key}' is disabled. Verify the config key exists in your LaunchDarkly project and is not targeting a disabled variation.")
             return
 
         input_text = 'You are a helpful assistant for the company LaunchDarkly. How can you help me?'

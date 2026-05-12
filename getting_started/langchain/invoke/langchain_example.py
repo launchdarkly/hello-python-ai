@@ -77,7 +77,7 @@ async def async_main():
     )
 
     if not config_value.enabled:
-        print("AI Config is disabled")
+        print(f"AI config '{ai_config_key}' is disabled. Verify the config key exists in your LaunchDarkly project and is not targeting a disabled variation.")
         return
 
     tracker = config_value.create_tracker()
