@@ -32,5 +32,5 @@ This example demonstrates how to use LaunchDarkly's `create_model` method, which
 ## Run
 
 ```bash
-poetry run managed-model
+poetry run model
 ```

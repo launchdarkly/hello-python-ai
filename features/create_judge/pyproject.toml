@@ -5,10 +5,10 @@ description = "Hello LaunchDarkly for Python AI - Judge"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [{include = "judge_example.py"}]
+packages = [{include = "create_judge_example.py"}]
 
 [tool.poetry.scripts]
-judge = "judge_example:main"
+judge = "create_judge_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"

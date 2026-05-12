@@ -5,10 +5,10 @@ description = "Hello LaunchDarkly for Python AI - Managed Agent Graph"
 authors = ["LaunchDarkly <dev@launchdarkly.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [{include = "managed_agent_graph_example.py"}]
+packages = [{include = "create_agent_graph_example.py"}]
 
 [tool.poetry.scripts]
-agent-graph = "managed_agent_graph_example:main"
+agent-graph = "create_agent_graph_example:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
