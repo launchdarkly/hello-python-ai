@@ -15,12 +15,10 @@ This example demonstrates how to use LaunchDarkly's AI Config with the Google Ge
 
    - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a Gemini model (e.g. `gemini-2.0-flash`) and a system message. Default key: `sample-completion`.
 
-1. Create a `.env` file in this directory with the following variables:
+1. Copy `.env.example` to `.env` and fill in your keys:
 
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_COMPLETION_KEY=sample-completion
-   GOOGLE_API_KEY=your-google-api-key
+   ```bash
+   cp .env.example .env
    ```
 
 1. Install the required dependencies:

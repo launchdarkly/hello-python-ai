@@ -15,20 +15,10 @@ This example demonstrates how to use LaunchDarkly's AI Config with LangChain, su
 
    - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a model and a system message. Default key: `sample-completion`.
 
-1. Create a `.env` file in this directory with the following variables:
+1. Copy `.env.example` to `.env` and fill in your keys (only the provider keys for providers you actually use are required):
 
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_COMPLETION_KEY=sample-completion
-   ```
-
-   Add the API keys for the providers you want to use:
-
-   ```
-   OPENAI_API_KEY=your-openai-api-key
-   GOOGLE_API_KEY=your-google-api-key
-   AWS_ACCESS_KEY_ID=your-access-key-id
-   AWS_SECRET_ACCESS_KEY=your-secret-access-key
+   ```bash
+   cp .env.example .env
    ```
 
 1. Install the required dependencies:

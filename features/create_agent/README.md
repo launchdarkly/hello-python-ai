@@ -15,12 +15,10 @@ This example demonstrates how to use LaunchDarkly's `create_agent` method, which
 
    - [Create an AI Agent Config](https://launchdarkly.com/docs/home/ai-configs/agents) with a model and agent instructions. Default key: `sample-agent`.
 
-1. Create a `.env` file in this directory with the following variables:
+1. Copy `.env.example` to `.env` and fill in your keys:
 
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AGENT_KEY=sample-agent
-   OPENAI_API_KEY=your-openai-api-key
+   ```bash
+   cp .env.example .env
    ```
 
 1. Install the required dependencies:
