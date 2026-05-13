@@ -127,10 +127,8 @@ async def async_main():
                 print(f"  score: {eval_result.score}")
                 print(f"  reasoning: {eval_result.reasoning}")
 
-    # For convenience during example debugging, we print the raw error. In
-    # production, sanitize errors before logging — provider responses may
-    # include credentials or other sensitive data.
     except Exception as err:
+        # In production, sanitize before logging — provider errors may include credentials.
         print("Error:", err)
     finally:
         # Flush pending events and close the client.
