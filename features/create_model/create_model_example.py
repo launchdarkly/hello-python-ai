@@ -95,6 +95,9 @@ async def async_main():
         else:
             print("\nNo judge evaluations were performed. Try adding a judge to the AI config to see results.")
 
+    # For convenience during example debugging, we print the raw error. In
+    # production, sanitize errors before logging — provider responses may
+    # include credentials or other sensitive data.
     except Exception as err:
         print("Error:", err)
     finally:

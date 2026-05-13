@@ -147,6 +147,9 @@ def ai_node(
             }
         )
         
+    # For convenience during example debugging, we print the raw error. In
+    # production, sanitize errors before logging — provider responses may
+    # include credentials or other sensitive data.
     except Exception as e:
         print(f"Error in node for {config_key}: {e}")
         return Command(
@@ -278,6 +281,9 @@ def calculate_average(numbers):
         print(final_report)
         print("="*80)
         
+    # For convenience during example debugging, we print the raw error. In
+    # production, sanitize errors before logging — provider responses may
+    # include credentials or other sensitive data.
     except Exception as e:
         print(f"Error during workflow execution: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")

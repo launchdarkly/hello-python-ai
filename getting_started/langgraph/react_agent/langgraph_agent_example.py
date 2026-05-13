@@ -121,6 +121,9 @@ def main():
         if summary.tool_calls:
             print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
+    # For convenience during example debugging, we print the raw error. In
+    # production, sanitize errors before logging — provider responses may
+    # include credentials or other sensitive data.
     except Exception as e:
         print(f"\nError: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
