@@ -23,8 +23,8 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config keys for the two agents
-analyzer_config_key = os.getenv('LAUNCHDARKLY_ANALYZER_CONFIG_KEY', 'code-review-analyzer')
-documentation_config_key = os.getenv('LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY', 'code-review-documentation')
+analyzer_config_key = os.getenv('LAUNCHDARKLY_ANALYZER_KEY', 'code-review-analyzer')
+documentation_config_key = os.getenv('LAUNCHDARKLY_DOCUMENTATION_KEY', 'code-review-documentation')
 
 # Custom state class for the code review workflow
 class CodeReviewState(TypedDict):

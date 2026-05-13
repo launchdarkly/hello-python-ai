@@ -17,7 +17,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set judge_key to the Judge key you want to use.
-judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge')
+judge_key = os.getenv('LAUNCHDARKLY_JUDGE_KEY', 'sample-judge')
 
 
 async def async_main():

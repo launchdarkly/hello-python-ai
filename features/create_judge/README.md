@@ -13,13 +13,13 @@ This example demonstrates how to use LaunchDarkly's `create_judge` method to eva
 
 1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
 
-   - [Create a Judge Config](https://launchdarkly.com/docs/home/ai-configs/judges) for evaluation. Default key: `sample-ai-judge`.
+   - [Create a Judge Config](https://launchdarkly.com/docs/home/ai-configs/judges) for evaluation. Default key: `sample-judge`.
 
 1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AI_JUDGE_KEY=sample-ai-judge
+   LAUNCHDARKLY_JUDGE_KEY=sample-judge
    OPENAI_API_KEY=your-openai-api-key
    ```
 

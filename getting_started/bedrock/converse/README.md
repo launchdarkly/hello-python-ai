@@ -13,16 +13,16 @@ This example demonstrates how to use LaunchDarkly's AI Config with the AWS Bedro
 
 1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
 
-   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a Bedrock model and a system message. Default key: `sample-completion-config`.
+   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a Bedrock model and a system message. Default key: `sample-completion`.
 
 1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AI_CONFIG_KEY=sample-completion-config
+   LAUNCHDARKLY_COMPLETION_KEY=sample-completion
    ```
 
-   > `LAUNCHDARKLY_AI_CONFIG_KEY` defaults to `sample-completion-config` if not set.
+   > `LAUNCHDARKLY_COMPLETION_KEY` defaults to `sample-completion` if not set.
 
 1. Ensure your AWS credentials can be [auto-detected by the `boto3` library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). You can set them in your `.env` file:
 

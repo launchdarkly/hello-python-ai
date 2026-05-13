@@ -40,14 +40,14 @@ def get_bedrock_metrics(response):
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config_key to the AI Config key you want to evaluate.
-ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-completion-config')
+ai_config_key = os.getenv('LAUNCHDARKLY_COMPLETION_KEY', 'sample-completion')
 
 def main():
     if not sdk_key:
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
     if not ai_config_key:
-        print("*** Please set the LAUNCHDARKLY_AI_CONFIG_KEY env first")
+        print("*** Please set the LAUNCHDARKLY_COMPLETION_KEY env first")
         exit()
 
     ldclient.set_config(Config(sdk_key, plugins=[

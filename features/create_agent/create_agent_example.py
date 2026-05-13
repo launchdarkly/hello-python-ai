@@ -17,7 +17,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set agent_config_key to the AI Agent Config key you want to evaluate.
-agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-agent-config')
+agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_KEY', 'sample-agent')
 
 
 def get_weather(city: str) -> str:

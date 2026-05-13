@@ -13,13 +13,13 @@ This example demonstrates how to use LaunchDarkly's AI Config with the OpenAI pr
 
 1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
 
-   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with an OpenAI model (e.g. `gpt-4`) and a system message. Default key: `sample-completion-config`.
+   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with an OpenAI model (e.g. `gpt-4`) and a system message. Default key: `sample-completion`.
 
 1. Create a `.env` file in this directory with the following variables:
 
    ```
    LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AI_CONFIG_KEY=sample-completion-config
+   LAUNCHDARKLY_COMPLETION_KEY=sample-completion
    OPENAI_API_KEY=your-openai-api-key
    ```
 
