@@ -34,7 +34,7 @@ def get_bedrock_metrics(response):
 
     duration_ms = response.get("metrics", {}).get("latencyMs")
 
-    return LDAIMetrics(success=success, usage=usage, duration_ms=duration_ms)
+    return LDAIMetrics(success=success, tokens=usage, duration_ms=duration_ms)
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')

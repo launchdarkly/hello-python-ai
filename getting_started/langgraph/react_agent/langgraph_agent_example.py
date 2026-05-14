@@ -33,7 +33,7 @@ def map_provider_to_langchain(provider_name):
 def get_langgraph_metrics(response):
     """Extract aggregated metrics from a LangGraph agent response."""
     messages = response.get("messages", [])
-    return LDAIMetrics(success=True, usage=sum_token_usage_from_messages(messages))
+    return LDAIMetrics(success=True, tokens=sum_token_usage_from_messages(messages))
 
 def get_weather(city: str) -> str:
     """Get the weather for a given city."""
