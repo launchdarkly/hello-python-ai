@@ -79,9 +79,10 @@ async def async_main():
 
         judge_result = await judge.evaluate(input_text, output_text)
 
-        # Track the judge evaluation scores on the tracker for the aiConfig you are evaluating
-        # Example:
-        # aiConfig.create_tracker().track_judge_result(judge_result)
+        # If the output you're judging came from another AI Config, track the
+        # result on that config's tracker so the metric is attributed to the
+        # right config:
+        # ai_config.create_tracker().track_judge_result(judge_result)
 
         print("\nJudge result:")
         print(f"- judge_config_key: {judge_key}")
