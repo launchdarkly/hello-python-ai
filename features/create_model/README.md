@@ -13,14 +13,12 @@ This example demonstrates how to use LaunchDarkly's `create_model` method, which
 
 1. Create the following config in your LaunchDarkly project. You can use a different key by setting the environment variable in your `.env`.
 
-   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a model and system message. Default key: `sample-completion-config`.
+   - [Create an AI Config](https://launchdarkly.com/docs/home/ai-configs/create) with a model and system message. Default key: `sample-completion`.
 
-1. Create a `.env` file in this directory with the following variables:
+1. Copy `.env.example` to `.env` and fill in your keys:
 
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AI_CONFIG_KEY=sample-completion-config
-   OPENAI_API_KEY=your-openai-api-key
+   ```bash
+   cp .env.example .env
    ```
 
 1. Install the required dependencies:

@@ -23,8 +23,8 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config keys for the two agents
-analyzer_config_key = os.getenv('LAUNCHDARKLY_ANALYZER_CONFIG_KEY', 'code-review-analyzer')
-documentation_config_key = os.getenv('LAUNCHDARKLY_DOCUMENTATION_CONFIG_KEY', 'code-review-documentation')
+analyzer_config_key = os.getenv('LAUNCHDARKLY_ANALYZER_KEY', 'code-review-analyzer')
+documentation_config_key = os.getenv('LAUNCHDARKLY_DOCUMENTATION_KEY', 'code-review-documentation')
 
 # Custom state class for the code review workflow
 class CodeReviewState(TypedDict):
@@ -148,6 +148,7 @@ def ai_node(
         )
         
     except Exception as e:
+        # In production, sanitize before logging — provider errors may include credentials.
         print(f"Error in node for {config_key}: {e}")
         return Command(
             goto=END,
@@ -279,6 +280,7 @@ def calculate_average(numbers):
         print("="*80)
         
     except Exception as e:
+        # In production, sanitize before logging — provider errors may include credentials.
         print(f"Error during workflow execution: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
 

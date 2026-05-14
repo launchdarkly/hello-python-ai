@@ -16,12 +16,10 @@ This example demonstrates how to use LaunchDarkly's `create_agent_graph` method,
    - [Create AI Agent Configs](https://launchdarkly.com/docs/home/ai-configs/agents) for each node in your graph. Configure each with a model and agent instructions. Add tools (e.g. `search_flights`, `search_hotels`, `get_weather`) to the agents that need them.
    - [Create an Agent Graph](https://launchdarkly.com/docs/home/ai-configs/create) that connects your agent configs as nodes with edges defining the workflow. Default key: `sample-agent-graph`.
 
-1. Create a `.env` file in this directory with the following variables:
+1. Copy `.env.example` to `.env` and fill in your keys:
 
-   ```
-   LAUNCHDARKLY_SDK_KEY=your-launchdarkly-sdk-key
-   LAUNCHDARKLY_AGENT_GRAPH_KEY=sample-agent-graph
-   OPENAI_API_KEY=your-openai-api-key
+   ```bash
+   cp .env.example .env
    ```
 
 1. Install the required dependencies:

@@ -128,6 +128,7 @@ async def async_main():
                 print(f"  reasoning: {eval_result.reasoning}")
 
     except Exception as err:
+        # In production, sanitize before logging — provider errors may include credentials.
         print("Error:", err)
     finally:
         # Flush pending events and close the client.

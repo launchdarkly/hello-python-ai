@@ -20,7 +20,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config key for the agent
-agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-agent-config')
+agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_KEY', 'sample-agent')
 
 def map_provider_to_langchain(provider_name):
     """Map LaunchDarkly provider names to LangChain provider names."""
@@ -122,6 +122,7 @@ def main():
             print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     except Exception as e:
+        # In production, sanitize before logging — provider errors may include credentials.
         print(f"\nError: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected providers.")
 

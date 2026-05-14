@@ -17,7 +17,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set judge_key to the Judge key you want to use.
-judge_key = os.getenv('LAUNCHDARKLY_AI_JUDGE_KEY', 'sample-ai-judge')
+judge_key = os.getenv('LAUNCHDARKLY_JUDGE_KEY', 'sample-judge')
 
 
 async def async_main():
@@ -95,6 +95,7 @@ async def async_main():
 
         print("\nDone!")
     except Exception as err:
+        # In production, sanitize before logging — provider errors may include credentials.
         print("Error:", err)
     finally:
         # Flush pending events and close the client.

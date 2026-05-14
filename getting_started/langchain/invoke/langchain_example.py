@@ -19,7 +19,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config_key to the AI Config key you want to evaluate.
-ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-completion-config')
+ai_config_key = os.getenv('LAUNCHDARKLY_COMPLETION_KEY', 'sample-completion')
 
 def map_provider_to_langchain(provider_name):
     """Map LaunchDarkly provider names to LangChain provider names."""
@@ -35,7 +35,7 @@ async def async_main():
         print("*** Please set the LAUNCHDARKLY_SDK_KEY env first")
         exit()
     if not ai_config_key:
-        print("*** Please set the LAUNCHDARKLY_AI_CONFIG_KEY env first")
+        print("*** Please set the LAUNCHDARKLY_COMPLETION_KEY env first")
         exit()
 
     ldclient.set_config(Config(sdk_key, plugins=[
@@ -119,6 +119,7 @@ async def async_main():
             print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 
     except Exception as e:
+        # In production, sanitize before logging — provider errors may include credentials.
         print(f"Error during completion: {e}")
         print("Please ensure you have the correct API keys and credentials set up for the detected provider.")
 

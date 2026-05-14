@@ -17,7 +17,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set agent_config_key to the AI Agent Config key you want to evaluate.
-agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_CONFIG_KEY', 'sample-agent-config')
+agent_config_key = os.getenv('LAUNCHDARKLY_AGENT_KEY', 'sample-agent')
 
 
 def get_weather(city: str) -> str:
@@ -110,6 +110,7 @@ async def async_main():
             print("\nNo judge evaluations were performed.")
 
     except Exception as err:
+        # In production, sanitize before logging — provider errors may include credentials.
         print("Error:", err)
     finally:
         # Flush pending events and close the client.

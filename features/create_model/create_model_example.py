@@ -17,7 +17,7 @@ logging.getLogger('ldclient').setLevel(logging.WARNING)
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
 # Set config_key to the AI Config key you want to evaluate.
-ai_config_key = os.getenv('LAUNCHDARKLY_AI_CONFIG_KEY', 'sample-completion-config')
+ai_config_key = os.getenv('LAUNCHDARKLY_COMPLETION_KEY', 'sample-completion')
 
 
 async def async_main():
@@ -96,6 +96,7 @@ async def async_main():
             print("\nNo judge evaluations were performed. Try adding a judge to the AI config to see results.")
 
     except Exception as err:
+        # In production, sanitize before logging — provider errors may include credentials.
         print("Error:", err)
     finally:
         # Flush pending events and close the client.
