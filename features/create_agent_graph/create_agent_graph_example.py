@@ -63,7 +63,7 @@ async def async_main():
     )
 
     try:
-        graph = await aiclient.create_agent_graph(
+        graph = aiclient.create_agent_graph(
             graph_key,
             context,
             tools={

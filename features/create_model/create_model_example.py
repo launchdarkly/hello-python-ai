@@ -58,8 +58,8 @@ async def async_main():
         #       provider={'name': 'openai'},
         #       messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}],
         #   )
-        #   chat = await aiclient.create_model(ai_config_key, context, default, {'companyName': 'LaunchDarkly'})
-        chat = await aiclient.create_model(ai_config_key, context, variables={
+        #   chat = aiclient.create_model(ai_config_key, context, default, {'companyName': 'LaunchDarkly'})
+        chat = aiclient.create_model(ai_config_key, context, variables={
             'companyName': 'LaunchDarkly',
         })
 
