@@ -1,6 +1,6 @@
 # LangChain Example (Multiple Providers)
 
-This example demonstrates how to use LaunchDarkly's AI Config with LangChain, supporting multiple providers including OpenAI, Bedrock, and Gemini. You can add additional LangChain providers using the `poetry add` command.
+This example demonstrates how to use LaunchDarkly's AI Config with LangChain, supporting multiple providers including OpenAI, Anthropic, Google GenAI, and AWS Bedrock. To use a different provider, install the corresponding `langchain-*` package (e.g. `poetry add langchain-mistralai`).
 
 ## Prerequisites
 
