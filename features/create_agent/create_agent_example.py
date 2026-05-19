@@ -63,8 +63,8 @@ async def async_main():
         #       provider={'name': 'openai'},
         #       instructions='You are a helpful weather assistant.',
         #   )
-        #   agent = await aiclient.create_agent(agent_config_key, context, tools={'get_weather': get_weather}, default=default)
-        agent = await aiclient.create_agent(
+        #   agent = aiclient.create_agent(agent_config_key, context, tools={'get_weather': get_weather}, default=default)
+        agent = aiclient.create_agent(
             agent_config_key,
             context,
             tools={'get_weather': get_weather},
