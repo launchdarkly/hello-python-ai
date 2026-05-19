@@ -56,10 +56,10 @@ def track_langgraph_metrics(tracker, func, prev_message_count=0):
             new_messages = result["messages"][prev_message_count:]
             for message in new_messages:
                 metrics = get_ai_metrics_from_response(message)
-                if metrics.usage:
-                    total_input_tokens += metrics.usage.input
-                    total_output_tokens += metrics.usage.output
-                    total_tokens += metrics.usage.total
+                if metrics.tokens:
+                    total_input_tokens += metrics.tokens.input
+                    total_output_tokens += metrics.tokens.output
+                    total_tokens += metrics.tokens.total
         if total_tokens > 0:
             tracker.track_tokens(
                 TokenUsage(

@@ -101,10 +101,10 @@ def main():
     print("\nDone! The AI config was evaluated and the following metrics were tracked:")
     print(f"  Duration:      {summary.duration_ms}ms")
     print(f"  Success:       {summary.success}")
-    if summary.usage:
-        print(f"  Input tokens:  {summary.usage.input}")
-        print(f"  Output tokens: {summary.usage.output}")
-        print(f"  Total tokens:  {summary.usage.total}")
+    if summary.tokens:
+        print(f"  Input tokens:  {summary.tokens.input}")
+        print(f"  Output tokens: {summary.tokens.output}")
+        print(f"  Total tokens:  {summary.tokens.total}")
     if summary.tool_calls:
         print(f"  Tool calls:    {', '.join(summary.tool_calls)}")
 

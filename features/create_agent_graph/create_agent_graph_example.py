@@ -92,10 +92,10 @@ async def async_main():
             print(f"  Success:       {summary.success}")
         if summary.path:
             print(f"  Path:          {' -> '.join(summary.path)}")
-        if summary.usage:
-            print(f"  Input tokens:  {summary.usage.input}")
-            print(f"  Output tokens: {summary.usage.output}")
-            print(f"  Total tokens:  {summary.usage.total}")
+        if summary.tokens:
+            print(f"  Input tokens:  {summary.tokens.input}")
+            print(f"  Output tokens: {summary.tokens.output}")
+            print(f"  Total tokens:  {summary.tokens.total}")
 
         if summary.node_metrics:
             print("\nPer-node metrics:")
@@ -105,10 +105,10 @@ async def async_main():
                     print(f"    Duration:      {node_summary.duration_ms}ms")
                 if node_summary.success is not None:
                     print(f"    Success:       {node_summary.success}")
-                if node_summary.usage:
-                    print(f"    Input tokens:  {node_summary.usage.input}")
-                    print(f"    Output tokens: {node_summary.usage.output}")
-                    print(f"    Total tokens:  {node_summary.usage.total}")
+                if node_summary.tokens:
+                    print(f"    Input tokens:  {node_summary.tokens.input}")
+                    print(f"    Output tokens: {node_summary.tokens.output}")
+                    print(f"    Total tokens:  {node_summary.tokens.total}")
                 if node_summary.tool_calls:
                     print(f"    Tool calls:    {', '.join(node_summary.tool_calls)}")
 
