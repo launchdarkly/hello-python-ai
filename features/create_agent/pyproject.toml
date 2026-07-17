@@ -14,7 +14,7 @@ agent = "create_agent_example:main"
 python = "^3.10"
 python-dotenv = ">=1.0.0"
 launchdarkly-server-sdk-ai = ">=1.1.0,<2.0.0"
-launchdarkly-observability = ">=0.1.1"
+launchdarkly-observability = ">=1.2.4,<2.0.0"
 launchdarkly-server-sdk-ai-openai = {version = ">=0.7.0", extras = ["agents"]}
 launchdarkly-server-sdk-ai-langchain = ">=0.8.0"
 openai = ">=1.0.0"
