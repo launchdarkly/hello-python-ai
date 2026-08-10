@@ -76,7 +76,7 @@ def main():
     # Pass a default for improved resiliency when the AI config is unavailable
     # or LaunchDarkly is unreachable; omit for a disabled default.
     # Example:
-    #   default = AIConfig(
+    #   default = AICompletionConfigDefault(
     #       enabled=True,
     #       model=ModelConfig(name='my-default-model'),
     #       provider=ProviderConfig(name='bedrock'),
