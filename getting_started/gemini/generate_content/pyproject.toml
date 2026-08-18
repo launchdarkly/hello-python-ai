@@ -16,6 +16,9 @@ python-dotenv = ">=1.0.0"
 launchdarkly-server-sdk-ai = ">=0.20.0"
 launchdarkly-observability = ">=0.1.0"
 google-genai = "^1.30.0"
+# Transitive dependency floors required to satisfy security advisories.
+cryptography = ">=50.0.0"
+pyasn1 = ">=0.6.4"
 
 [build-system]
 requires = ["poetry-core"]

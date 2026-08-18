@@ -19,6 +19,8 @@ launchdarkly-server-sdk-ai-openai = ">=0.5.0"
 launchdarkly-server-sdk-ai-langchain = ">=0.6.0"
 openai = ">=1.0.0"
 langchain-openai = "^1.0.0"
+# Transitive dependency floors required to satisfy security advisories.
+langsmith = ">=0.8.18"
 
 [build-system]
 requires = ["poetry-core"]
