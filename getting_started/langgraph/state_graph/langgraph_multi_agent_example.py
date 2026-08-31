@@ -8,8 +8,8 @@ from ldai import LDAIClient
 from ldai.tracker import TokenUsage
 from ldai_langchain import get_ai_metrics_from_response
 from ldobserve import ObservabilityConfig, ObservabilityPlugin
+from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from langgraph.prebuilt import create_react_agent
 from langgraph.graph import StateGraph, END
 from langgraph.types import Command
 from typing_extensions import TypedDict
@@ -97,8 +97,8 @@ def create_agent_with_config(aiclient, config_key, context):
         model_provider=langchain_provider,
     )
     
-    # Create a React agent with the LLM
-    agent = create_react_agent(llm, [], prompt=agent_config.instructions)
+    # Create a tool-calling agent with the LLM
+    agent = create_agent(llm, [], system_prompt=agent_config.instructions)
     
     return agent, agent_config.create_tracker(), False
 
