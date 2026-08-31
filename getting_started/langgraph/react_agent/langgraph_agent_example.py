@@ -8,8 +8,8 @@ from ldai import LDAIClient
 from ldai.providers import LDAIMetrics
 from ldai_langchain import sum_token_usage_from_messages
 from ldobserve import ObservabilityConfig, ObservabilityPlugin
+from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from langgraph.prebuilt import create_react_agent
 
 load_dotenv()
 
@@ -87,11 +87,11 @@ def main():
         model_provider=langchain_provider,
     )
     
-    # Create a React agent with the LLM and tools
-    agent = create_react_agent(
-        model=llm,
+    # Create a tool-calling agent with the LLM and tools
+    agent = create_agent(
+        llm,
         tools=[get_weather],
-        prompt=agent_config.instructions
+        system_prompt=agent_config.instructions
     )
 
     SAMPLE_QUESTION = "What is the weather in Tokyo?"
