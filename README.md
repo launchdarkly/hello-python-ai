@@ -1,5 +1,13 @@
 # LaunchDarkly AI SDK for Python - Examples
 
+> [!WARNING]
+> **This repository is archived.** These examples use the legacy LaunchDarkly AI SDK for Python
+> (`launchdarkly-server-sdk-ai`), which is in maintenance mode and no longer receives new features.
+>
+> For new applications, use the current [Python AI SDK](https://github.com/launchdarkly/python-ai-sdk)
+> and its [examples](https://github.com/launchdarkly/python-ai-sdk/tree/main/examples).
+> To move existing code, see [Migrate from the legacy AI SDKs](https://docs.launchdarkly.com/sdk/ai/migration).
+
 | Package | PyPI | Docs |
 | --- | --- | --- |
 | [launchdarkly-server-sdk-ai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/sdk/server-ai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai)](https://pypi.org/project/launchdarkly-server-sdk-ai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
