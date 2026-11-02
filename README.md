@@ -10,14 +10,14 @@
 
 | Package | PyPI | Docs |
 | --- | --- | --- |
-| [launchdarkly-server-sdk-ai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/sdk/server-ai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai)](https://pypi.org/project/launchdarkly-server-sdk-ai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
-| [launchdarkly-server-sdk-ai-openai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-openai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-openai)](https://pypi.org/project/launchdarkly-server-sdk-ai-openai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
-| [launchdarkly-server-sdk-ai-langchain](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-langchain) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-langchain)](https://pypi.org/project/launchdarkly-server-sdk-ai-langchain/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python) |
+| [launchdarkly-server-sdk-ai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/sdk/server-ai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai)](https://pypi.org/project/launchdarkly-server-sdk-ai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python-legacy) |
+| [launchdarkly-server-sdk-ai-openai](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-openai) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-openai)](https://pypi.org/project/launchdarkly-server-sdk-ai-openai/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python-legacy) |
+| [launchdarkly-server-sdk-ai-langchain](https://github.com/launchdarkly/python-server-sdk-ai/tree/main/packages/ai-providers/server-ai-langchain) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-server-sdk-ai-langchain)](https://pypi.org/project/launchdarkly-server-sdk-ai-langchain/) | [Reference](https://docs.launchdarkly.com/sdk/ai/python-legacy) |
 | [launchdarkly-observability](https://github.com/launchdarkly/observability-sdk/tree/main/sdk/%40launchdarkly/observability-python) | [![PyPI](https://img.shields.io/pypi/v/launchdarkly-observability)](https://pypi.org/project/launchdarkly-observability/) | [Reference](https://docs.launchdarkly.com/sdk/observability/python) |
 
 Each example is a self-contained application you can run independently to explore LaunchDarkly's AI APIs hands-on. Pick one that matches your provider or use case, follow the README, and you'll be up and running in minutes.
 
-For more comprehensive instructions, visit the [Quickstart page](https://docs.launchdarkly.com/home/ai-configs/quickstart) or the [Python reference guide](https://docs.launchdarkly.com/sdk/ai/python).
+For more comprehensive instructions, visit the [Quickstart page](https://docs.launchdarkly.com/home/ai-configs/quickstart) or the [legacy Python reference guide](https://docs.launchdarkly.com/sdk/ai/python-legacy).
 
 ## Getting Started
 
